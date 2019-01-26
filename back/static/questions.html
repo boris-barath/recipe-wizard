@@ -35,7 +35,7 @@
     <section class="section">
       <div class="container">
 
-        <h1 class="title">Do you have garlic?</h1>
+        <h1 class="title" name="question"></h1>
         <div class="buttons title-buttons">
             <a class="button is-medium is-outlined is-success">
             Yes
@@ -122,10 +122,18 @@
 
     <script>
       $( document ).ready(function() {
-        $.get( "http://localhost:5000/question", function( data ) {
-          console.log(data);
-        });
+        $.ajax({
+        url : "http://localhost:5000/question",
+        type : "get",
+        async: false,
+        success : function(data) {
+            console.log(data);
+            $(".title").text(`Do you have ${data}?`);
+        }
+ });
       });
+
+      
     </script>
   </body>
 </html>

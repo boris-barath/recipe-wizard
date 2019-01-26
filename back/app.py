@@ -1,7 +1,7 @@
 import uuid
 
 from flask import Flask, flash, request, redirect, url_for, Response, session
-from flask_session import Session
+# from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 
@@ -14,9 +14,9 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SESSION_TYPE'] = 'filesystem'
+# app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = 'super secret key'
-Session(app)
+# Session(app)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -59,7 +59,7 @@ def home():
 @app.route('/questions')
 def questions():
     content = get_file('static/questions.html')
-    session['session_id'] = uuid.uuid4()
+    # session['session_id'] = uuid.uuid4()
     return Response(content, mimetype="text/html")
 
 
