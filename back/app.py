@@ -1,4 +1,7 @@
+import uuid
+
 from flask import Flask, flash, request, redirect, url_for, Response, session
+from flask.ext.session import Session
 from werkzeug.utils import secure_filename
 import os
 import random
@@ -9,6 +12,9 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SESSION_TYPE'] = 'filesystem'
+app.secret_key = 'super secret key'
+Session(app)
 
 
 def root_dir():  # pragma: no cover
@@ -48,6 +54,7 @@ def home():
 @app.route('/questions')
 def questions():
     content = get_file('static/questions.html')
+    session['session_id'] = uuid.uuid4()
     return Response(content, mimetype="text/html")
 
 
@@ -77,4 +84,5 @@ def upload_file():
 # pass the answer (yes/no/dont know) to the prev quesiton here. if no answer, its the first question
 @app.route('/question', methods=['POST'])
 def question():
+    print(session['session_id'])
     raise NotImplementedError

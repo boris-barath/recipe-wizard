@@ -185,3 +185,4 @@ typings/
 .serverless
 
 setup.sh
+back/flask_session

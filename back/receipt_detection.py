@@ -1,27 +1,63 @@
 from google.cloud import vision
 import io
 import json
+import string
 
 home = "/Users/mackopes/"
 illegal_characters = set('0123456789%$£€:#')
 min_word_length = 3
 
-ingredient_database = set([
-    "cola",
-    "coke",
-    "pepsi",
-    "donut",
-    "banana",
-    "tomato",
-    "bread",
-    "pizza",
-    "raspber",
-    "blueber",
-    "avodaco",
-    "oat",
-    "cheese"
-    ])
+class IngredientDatabase:
+    def __init__(self, path, alphabet = string.ascii_lowercase):
+        self.root = dict()
+        self.alphabet = alphabet
 
+        with open(path, "r") as ingredients:
+            for line in ingredients:
+                for word in line.split():
+                    self.add(word.lower())
+    
+    def add(self, word):
+        if len(word) < min_word_length or any(c not in self.alphabet for c in word):
+            return
+
+        cur = self.root
+
+        for letter in word:
+            cur = cur.setdefault(letter, {})
+        cur["end"] = "end"
+
+    def contains_substr_of(self, substr):
+        for i in range(len(substr)):
+            word = substr[i:]
+            cur = self.root
+            for letter in word:
+                if "end" in cur:
+                    return True
+                elif letter in cur:
+                    cur = cur[letter]
+                else:
+                    continue
+        else:
+            return False
+
+ingredient_database = IngredientDatabase('ingredients.txt')
+
+# ingredient_database = set([
+#     "cola",
+#     "coke",
+#     "pepsi",
+#     "donut",
+#     "banana",
+#     "tomato",
+#     "bread",
+#     "pizza",
+#     "raspber",
+#     "blueber",
+#     "avodaco",
+#     "oat",
+#     "cheese"
+#     ])
 
 def detect_ingredients(path):
     """Detects document features in an image."""
@@ -31,26 +67,13 @@ def detect_ingredients(path):
         content = image_file.read()
 
     image = vision.types.Image(content=content)
-
     response = client.document_text_detection(image=image)
 
     all_blocks = [block for page in response.full_text_annotation.pages for block in page.blocks]
     lines = list(set(get_block_with_ingridients(all_blocks)))
 
-    # for line in lines:
-    #     print(line)
-
     return lines
 
-    # for page in response.full_text_annotation.pages:
-    #     for block in page.blocks:
-    #         print('\nBlock confidence: {}\n'.format(block.confidence))
-
-    #         for paragraph in block.paragraphs:
-    #             for line in get_lines(paragraph):
-    #                 print(' '. join(line))
-
-    #         print('############ end of block ##############')
 
 def connect_words(paragraph, symbols = ".,-"):
     words = []
@@ -111,7 +134,7 @@ def get_lines(paragraph):
 
     return lines
 
-def block_lines_generator(block):
+def block_to_lines_generator(block):
     for paragraph in block.paragraphs:
         for line in get_lines(paragraph):
             yield ' '.join(line)
@@ -120,23 +143,24 @@ def get_block_with_ingridients(blocks):
     cur_max = 0
     max_lines = []
     for block in blocks:
-        lines = list(block_lines_generator(block))
-        ingredient_count = [is_ingridient(line) for line in lines].count(True)
+        lines = list(block_to_lines_generator(block))
+        # check if ingredient is in line
+        ingredient_count = [has_ingridient(line) for line in lines].count(True)
         if ingredient_count >= cur_max:
             cur_max = ingredient_count
             max_lines = lines
 
     return max_lines
 
-def is_ingridient(line):
-    for ingredient in ingredient_database:
-        if ingredient in line:
-            return True
-    return False
+# def has_ingridient(line):
+#     for ingredient in ingredient_database:
+#         if ingredient in line:
+#             return True
+#     return False
 
+def has_ingridient(line):
+    return ingredient_database.contains_substr_of(line)
 
-
-        
 if __name__ == "__main__":
-    for line in detect_ingredients(home + "Desktop/receipt1.png"):
+    for line in detect_ingredients(home + "Desktop/image.jpeg"):
         print(line)
