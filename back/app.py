@@ -43,6 +43,12 @@ def home():
     return Response(content, mimetype="text/html")
 
 
+@app.route('/questions')
+def questions():
+    content = get_file('static/questions.html')
+    return Response(content, mimetype="text/html")
+
+
 @app.route('/image', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
@@ -56,5 +62,5 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return redirect(url_for('uploaded_file', filename=filename))
+        return redirect('/questions')
     return 'unknown error'
