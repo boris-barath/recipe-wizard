@@ -47,7 +47,6 @@ def home():
 # page containing questions and final results
 @app.route('/questions')
 def questions():
-    session['username'] = generate_random_string()
     content = get_file('static/questions.html')
     return Response(content, mimetype="text/html")
 
