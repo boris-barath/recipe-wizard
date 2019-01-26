@@ -1,14 +1,13 @@
 from google.cloud import vision
 import io
-import json
 import string
 
-home = "/Users/mackopes/"
 illegal_characters = set('0123456789%$£€:#')
 min_word_length = 3
 
+
 class IngredientDatabase:
-    def __init__(self, path, alphabet = string.ascii_lowercase):
+    def __init__(self, path, alphabet=string.ascii_lowercase):
         self.root = dict()
         self.alphabet = alphabet
 
@@ -16,7 +15,7 @@ class IngredientDatabase:
             for line in ingredients:
                 for word in line.split():
                     self.add(word.lower())
-    
+
     def add(self, word):
         if len(word) < min_word_length or any(c not in self.alphabet for c in word):
             return
@@ -41,27 +40,13 @@ class IngredientDatabase:
         else:
             return False
 
+
 ingredient_database = IngredientDatabase('ingredients.txt')
 
-# ingredient_database = set([
-#     "cola",
-#     "coke",
-#     "pepsi",
-#     "donut",
-#     "banana",
-#     "tomato",
-#     "bread",
-#     "pizza",
-#     "raspber",
-#     "blueber",
-#     "avodaco",
-#     "oat",
-#     "cheese"
-#     ])
 
 def detect_ingredients(path):
     """Detects document features in an image."""
-    client = vision.ImageAnnotatorClient.from_service_account_json(home + "Desktop/creds-e3262d3bc3f9.json")
+    client = vision.ImageAnnotatorClient.from_service_account_json("creds.json")
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -75,7 +60,7 @@ def detect_ingredients(path):
     return lines
 
 
-def connect_words(paragraph, symbols = ".,-"):
+def connect_words(paragraph, symbols=".,-"):
     words = []
     concat_word = ""
     for word in paragraph:
@@ -93,6 +78,7 @@ def connect_words(paragraph, symbols = ".,-"):
 
     return words
 
+
 def possible_line_break(symbol):
     try:
         t = symbol.property.detected_break.type
@@ -100,16 +86,18 @@ def possible_line_break(symbol):
             return "\n"
     except:
         pass
-    
+
     return ""
+
 
 def get_words(paragraph):
     words = connect_words(
-                [''.join([
-                    symbol.text for symbol in word.symbols
-                ]).lower() + possible_line_break(word.symbols[-1])
-                for word in paragraph.words])
+        [''.join([
+            symbol.text for symbol in word.symbols
+        ]).lower() + possible_line_break(word.symbols[-1])
+         for word in paragraph.words])
     return words
+
 
 def get_lines(paragraph):
     words = get_words(paragraph)
@@ -134,10 +122,12 @@ def get_lines(paragraph):
 
     return lines
 
+
 def block_to_lines_generator(block):
     for paragraph in block.paragraphs:
         for line in get_lines(paragraph):
             yield ' '.join(line)
+
 
 def get_block_with_ingridients(blocks):
     cur_max = 0
@@ -152,15 +142,11 @@ def get_block_with_ingridients(blocks):
 
     return max_lines
 
-# def has_ingridient(line):
-#     for ingredient in ingredient_database:
-#         if ingredient in line:
-#             return True
-#     return False
 
 def has_ingridient(line):
     return ingredient_database.contains_substr_of(line)
 
+
 if __name__ == "__main__":
-    for line in detect_ingredients(home + "Desktop/image.jpeg"):
+    for line in detect_ingredients("static/uploaded-file.jpg"):
         print(line)
