@@ -47,15 +47,17 @@
         <p class="subtitle">
           Scan a receipt to see what you can cook with food you just bought
         </p>
+        <form action="/image" method="POST" enctype="multipart/form-data">
         <a class="button is-primary is-fullwidth">
             <label for="file-upload" class="custom-file-upload">Scan receipt</label>
         </a>
-        <input hidden id="file-upload" type="file"/>
-      </div>
+        <input hidden name="file-upload" id="file-upload" type="file" accept="image/*" capture="camera"/>
+        <input class="button is-primary is-fullwidth" type="submit" value="Submit">
+            </form>
       <br/>
       <a class="button is-primary is-fullwidth" href="static/questions.html">
             Find a recipe
-        </a>
+      </a>
     </section>
   </body>
 </html>
