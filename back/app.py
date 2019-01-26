@@ -1,8 +1,10 @@
 import uuid
 
 from flask import Flask, flash, request, redirect, url_for, Response, session
-from flask.ext.session import Session
+from flask_session import Session
 from werkzeug.utils import secure_filename
+from flask_cors import CORS, cross_origin
+
 import os
 import random
 import string
@@ -15,6 +17,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = 'super secret key'
 Session(app)
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 def root_dir():  # pragma: no cover
@@ -82,7 +87,7 @@ def upload_file():
 
 # post here to get a question or a results page if no questions are left.
 # pass the answer (yes/no/dont know) to the prev quesiton here. if no answer, its the first question
-@app.route('/question', methods=['POST'])
+@app.route('/question', methods=['GET'])
+@cross_origin()
 def question():
-    print(session['session_id'])
-    raise NotImplementedError
+    return 'beris'

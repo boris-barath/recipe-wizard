@@ -11,7 +11,7 @@
     <script
       src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
     ></script>
-    <script defer src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   </head>
   <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -119,5 +119,13 @@
         </div>
 
     </div>
+
+    <script>
+      $( document ).ready(function() {
+        $.get( "http://localhost:5000/question", function( data ) {
+          console.log(data);
+        });
+      });
+    </script>
   </body>
 </html>
