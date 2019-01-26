@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hello Bulma!</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
     <script
-      defer
       src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
     ></script>
+    <script defer src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   </head>
   <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -31,15 +30,6 @@
         <span aria-hidden="true"></span>
       </a>
     </div>
-    <!-- <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-primary"> <strong>Sign up</strong> </a>
-            <a class="button is-light"> Log in </a>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </nav>
   <body>
     <section class="section">
@@ -53,23 +43,36 @@
                 No
             </a>
         </div>
-        <p class="subtitle">What you have so far:</p>
-        <div class="tags has-addons">
-                <span class="tag is-outline">Spaghetti</span>
-                <a class="tag is-delete"></a>
-        </div>
+
         <p class="subtitle">What you can make:</p>
         <p>Answer more questions to get recommendations</p>
-        <br/>
-        <p class="subtitle">With additional ingredients:</p>
-        <div class="buttons">
-                <a class="button">Spaghetti Bolognese</a>
-                <a class="button">Spaghetti Carbonara</a>
-        </div>
-        
       </div>
       <br/>
 
     </section>
+
+    <div class = "inventory-button">
+        <div class = "close" onclick="$('.notification').toggleClass('active')">
+            <div class = "text">
+                <i class="fas fa-sort-up"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class = "notification active">
+        <div class = "text">
+            <p class="is-5">Your pantry</p>
+            <div class="tags are-large">
+                <span class="tag">Spaghetti <button class="delete is-small"></button></span>
+                <span class="tag">Cucumber <button class="delete is-small"></button></span>
+                <span class="tag">Ketchup <button class="delete is-small"></button></span>
+            </div>
+        </div>
+        <div class = "close" onclick="$('.notification').toggleClass('active')">
+            <div class = "text">
+                <i class="fas fa-sort-down"></i>
+            </div>
+        </div>
+    </div>
   </body>
 </html>
