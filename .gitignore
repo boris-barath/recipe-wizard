@@ -1,6 +1,7 @@
 .idea/
 cmake-build-debug/
 .DS_Store
+upload/*.jpg
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
