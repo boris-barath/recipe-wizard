@@ -5,14 +5,28 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.custom-title {
+  font-size: 25px;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+.title {
+  text-align: center;
+}
+
+.title-buttons {
+  justify-content: center;
+}
+
 .notification{
   position:fixed;
   top:150%;
   left:5%;
   height: 30%;
-  background: #3b3b3b;
+  background: whitesmoke;
   padding:15px;
-  color:#fff;
+  color: #3b3b3b;
   font-size:16px;
   border-radius:3px;
   transform:translateY(-50%);
@@ -21,14 +35,37 @@
   display: none;
 }
 
+.tag-column {
+  height: 100%;
+}
+
+.food-title {
+  font-size: 17px;
+  color: #555555;
+}
+
+.food-border {
+  border-bottom: 1px solid #eeeeee;
+}
+
+img {
+  border-radius: 4px;
+}
+
+.tags {
+  max-height: 100%;
+  overflow: scroll;
+  padding-bottom: 30px;
+}
+
 .tag {
   margin-left: 5px;
 }
 
 .is-5 {
   font-size: 20px;
-  margin-bottom: 10px;
   font-weight: bold;
+  padding-top: 8px;
 }
 
 .notification.active{
