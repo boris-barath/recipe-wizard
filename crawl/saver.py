@@ -2,7 +2,6 @@ import json
 
 from ingredient_parser import parse
 
-
 if __name__ == "__main__":
     with open('data.json', 'rb') as file:
         with open('output-parsed.txt', 'wb') as out:

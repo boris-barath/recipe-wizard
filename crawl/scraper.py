@@ -25,8 +25,11 @@ def search(query, data, seen):
             data['recipes'].append(recipe)
 
 
-MEAT = ['beef', 'chicken', 'salmon', 'prawn', 'lamb', 'fish', 'pork', 'turkey', 'goose', 'duck', 'tuna', 'steak', 'maskerel']
-ADDITIONAL = ['rice', 'pasta', 'bread', 'vegetables', 'fruit', 'eggs', 'cheese', 'potatoes', 'avocado', 'aubergine', 'couscous', 'tofu', 'kale', 'spinach', 'lentil', 'mushroom', 'beetroot', 'leek', 'cauliflower', 'broccoli', 'asparagus']
+MEAT = ['beef', 'chicken', 'salmon', 'prawn', 'lamb', 'fish', 'pork', 'turkey', 'goose', 'duck', 'tuna', 'steak',
+        'maskerel']
+ADDITIONAL = ['rice', 'pasta', 'bread', 'vegetables', 'fruit', 'eggs', 'cheese', 'potatoes', 'avocado', 'aubergine',
+              'couscous', 'tofu', 'kale', 'spinach', 'lentil', 'mushroom', 'beetroot', 'leek', 'cauliflower',
+              'broccoli', 'asparagus']
 
 if __name__ == "__main__":
     with open('data.json', 'r') as file:
@@ -47,7 +50,7 @@ if __name__ == "__main__":
             count += 1
 
             if count >= 3:
-               break
+                break
 
     with open('data.json', 'w') as file:
         json.dump(data, file)

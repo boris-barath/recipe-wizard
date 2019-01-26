@@ -1,27 +1,17 @@
-import json
-
-import itertools
-
-import math
-import operator
-
-import nltk
 from collections import defaultdict
-
-from ingredient_parser import parse
+import json
 
 
 class Recipe:
-    def __init__(self):
-        self.all_ingredients = set()
-        self.ingredients = set()
+    def __init__(self, id, ingredients):
+        self.id = id
+        self.ingredients = list(ingredients)
         self.is_impossible = False
 
     def impossible(self):
         self.is_impossible = True
 
     def add_ingredient(self, ingredient):
-        self.all_ingredients.add(ingredient)
         self.ingredients.add(ingredient)
 
     def calculate_ease(self, frequency_table):
@@ -35,10 +25,10 @@ class Recipe:
             self.difficulty *= frequency_table[ingredient]
 
 
-def return_question(reverse_mapping, formatted_recipes, available, not_available):
+def return_question(reverse_mapping, recipes, available, not_available):
     can_complete = []
 
-    for recipe in formatted_recipes:
+    for recipe in recipes:
         for item in available:
             if item in recipe.ingredients:
                 recipe.ingredients.remove(item)
@@ -59,7 +49,7 @@ def return_question(reverse_mapping, formatted_recipes, available, not_available
     else:
         frequencies = defaultdict(float)
 
-        for recipe in formatted_recipes:
+        for recipe in recipes:
             for ingredient in recipe.ingredients:
                 frequencies[ingredient] += 1
 
@@ -71,7 +61,7 @@ def return_question(reverse_mapping, formatted_recipes, available, not_available
         difficulty = 0
         easiest_recipe = None
 
-        for recipe in formatted_recipes:
+        for recipe in recipes:
             recipe.calculate_ease(frequencies)
 
             if recipe.difficulty > difficulty:
@@ -90,45 +80,47 @@ def return_question(reverse_mapping, formatted_recipes, available, not_available
         return easiest_ingredient
 
 
-if __name__ == "__main__":
-    with open('data.json', 'r') as file:
+def get_recipes(data):
+    return map(lambda x:
+               Recipe(
+                   x.get('id'),
+                   map(lambda y: y.get('ingredient').lower(), x.get('ingredients'))),
+               data)
+
+
+def get_data():
+    with open('recipes.json', 'r') as file:
         data = json.loads(file.read())
+        recipes = list(filter(lambda x: len(x.ingredients) > 0, get_recipes(data)))
+
         reverse_mapping = defaultdict(list)
-        formatted_recipes = []
+        for recipe in recipes:
+            for ingredient in recipe.ingredients:
+                reverse_mapping[ingredient].append(recipe)
 
-        for recipe in data['recipes']:
-            formatted_ingredients = set()
-            formatted_recipe = Recipe()
+        return recipes, reverse_mapping
 
-            for ingredient in recipe['ingredientLines']:
-                ingredient = parse(ingredient)['name']
-                tokens = nltk.word_tokenize(ingredient)
-                tagged = nltk.pos_tag(tokens)
-                ingredients = itertools.dropwhile(lambda ingredient: not ingredient[1].startswith('NN'), tagged)
-                ingredients = itertools.takewhile(lambda ingredient: ingredient[1].startswith('NN'), ingredients)
-                ingredients = map(lambda ingredient: ingredient[0], ingredients)
 
-                formatted = ' '.join(list(ingredients))
+def main():
+    recipes, reverse_mapping = get_data()
 
-                formatted_recipe.add_ingredient(formatted)
-                reverse_mapping[formatted].append(formatted_recipe)
-
-            formatted_recipes.append(formatted_recipe)
-
-    print(reverse_mapping)
     available = []
     not_available = []
 
     while True:
-        question = return_question(reverse_mapping, formatted_recipes, available, not_available)
+        question = return_question(reverse_mapping, recipes, available, not_available)
 
         if type(question) == str:
             print(f'Do you have: {question}')
         else:
-            print(f'Recipe: {question[0].all_ingredients}')
+            print(f'Recipe: {question[0].id}')
 
         response = input("Do you have this ingredient: ")
         if response == 'yes':
             available.append(question)
         else:
             not_available.append(question)
+
+
+if __name__ == "__main__":
+    main()
