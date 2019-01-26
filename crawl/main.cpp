@@ -12,7 +12,7 @@ using namespace freeling;
 
 int main() {
     vector<wstring> blacklist{L"tsp", L"tablespoon", L"handful", L"strip", L"mix", L"inch", L"box", L"lbs", L"medium",
-                              L"cup", L"teaspoon", L"glass"};
+                              L"cup", L"teaspoon", L"glass", L"ounce"};
 
     wstring lang = L"en";
     wstring ipath = L"/usr/local";
