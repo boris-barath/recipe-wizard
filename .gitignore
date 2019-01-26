@@ -181,3 +181,4 @@ typings/
 # Serverless directories
 .serverless
 
+setup.sh
