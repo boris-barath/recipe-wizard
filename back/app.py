@@ -1,6 +1,6 @@
 import uuid
 
-from flask import Flask, flash, request, redirect, url_for, Response, session
+from flask import Flask, flash, request, redirect, url_for, Response, session, render_template
 # from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
@@ -9,11 +9,10 @@ import os
 import random
 import string
 
-UPLOAD_FOLDER = '../upload'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = 'static/'
 # app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = 'super secret key'
 # Session(app)
@@ -51,16 +50,13 @@ def allowed_file(filename):
 # static page for initial page
 @app.route('/')
 def home():
-    content = get_file('static/index.html')
-    return Response(content, mimetype="text/html")
+    return render_template('index.html')
 
 
 # page containing questions and final results
 @app.route('/questions')
 def questions():
-    content = get_file('static/questions.html')
-    # session['session_id'] = uuid.uuid4()
-    return Response(content, mimetype="text/html")
+    return render_template('questions.html')
 
 
 # post request here to upload image
