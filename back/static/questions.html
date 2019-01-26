@@ -44,18 +44,32 @@
   <body>
     <section class="section">
       <div class="container">
-        <p class="subtitle">
-          Scan a receipt to see what you can cook with food you just bought
-        </p>
-        <a class="button is-primary is-fullwidth">
-            <label for="file-upload" class="custom-file-upload">Scan receipt</label>
-        </a>
-        <input hidden id="file-upload" type="file"/>
+        <h1 class="title">Do you have tomatoes?</h1>
+        <div class="buttons">
+            <a class="button is-outlined is-success">
+            Yes
+            </a>
+            <a class="button is-outlined is-danger">
+                No
+            </a>
+        </div>
+        <p class="subtitle">What you have so far:</p>
+        <div class="tags has-addons">
+                <span class="tag is-outline">Spaghetti</span>
+                <a class="tag is-delete"></a>
+        </div>
+        <p class="subtitle">What you can make:</p>
+        <p>Answer more questions to get recommendations</p>
+        <br/>
+        <p class="subtitle">With additional ingredients:</p>
+        <div class="buttons">
+                <a class="button">Spaghetti Bolognese</a>
+                <a class="button">Spaghetti Carbonara</a>
+        </div>
+        
       </div>
       <br/>
-      <a class="button is-primary is-fullwidth" href="static/questions.html">
-            Find a recipe
-        </a>
+
     </section>
   </body>
 </html>
