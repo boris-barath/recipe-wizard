@@ -1,0 +1,154 @@
+.inventory-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.notification{
+  position:fixed;
+  top:150%;
+  left:5%;
+  height: 30%;
+  background: #3b3b3b;
+  padding:15px;
+  color:#fff;
+  font-size:16px;
+  border-radius:3px;
+  transform:translateY(-50%);
+  box-sizing:border-box;
+  animation:0.3s down ease 1;
+  display: none;
+}
+
+.tag {
+  margin-left: 5px;
+}
+
+.is-5 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.notification.active{
+  top:90%;
+  left:5%;
+  animation:0.3s up ease 1;
+  display:block;
+}
+
+.notification a{
+  color: skyblue;
+  text-decoration:none;
+  display:block;
+  float:right;
+  width:auto;
+  padding:0 10px;
+  height:40px;
+  margin-left:15px;
+  background:rgba(0,0,0,0.1);
+  border-radius:5px;
+}
+
+.text{
+  height:40px;
+  line-height:40px;
+  padding:0 10px;
+  float:left;
+}
+
+.close{
+  height:40px;
+  width:40px;
+  line-height:40px;
+  border-radius:50%;
+  text-align:center;
+  position:relative;
+  cursor:pointer;
+  overflow:hidden;
+  float:right;
+  background:rgba(0,0,0,0.1);
+  font-size:20px;
+}
+
+.close .text{
+  padding:0;
+  text-align:center;
+  width:100%;
+  height:100%;
+}
+
+@keyframes up{
+  0%{
+    display:none;
+    top:100%;
+    opacity:0;
+  }
+  75%{
+    top:90%;
+    opacity:1;
+  }
+  100%{
+    display:block;
+  }
+}
+@keyframes down{
+  0%{
+    top:90%;
+    opacity:1;
+    display:block;
+  }
+  75%{
+    top:150%;
+    opacity:0;
+  }
+  100%{
+    display:block;
+  }
+}
+@keyframes sup{
+  0%{
+    display:none;
+    top:100%;
+    transform:translateY(0%);
+    opacity:0;
+  }
+  75%{
+    top:100%;
+    transform:translateY(-100%);
+    opacity:1;
+  }
+  100%{
+    display:block;
+  }
+}
+@keyframes sdown{
+  0%{
+    top:100%;
+    opacity:1;
+    display:block;
+    transform:translateY(-100%);
+  }
+  75%{
+    top:150%;
+    opacity:0;
+    transform:translateY(0%);
+  }
+  100%{
+    display:block;
+  }
+}
+@media only screen and (max-width:560px){
+  .notification,.notification.active{
+    width:100%;
+    top:100%;
+    transform:translateY(-100%);
+    left:0;
+    border-radius:0;
+    animation:0.3s sdown ease 1;
+  }
+  .notification.active{
+    animation:0.3s sup ease 1;
+  }
+}
