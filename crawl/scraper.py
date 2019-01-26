@@ -10,7 +10,7 @@ APP_KEY = os.environ['APP_KEY']
 
 @RateLimiter(max_calls=5, period=60)
 def search(query, data, seen):
-    response = requests.get(PATH, params={'app_id': APP_ID, 'app_key': APP_KEY, 'q': query, 'to': 100})
+    response = requests.get(PATH, params={'app_id': APP_ID, 'app_key': APP_KEY, 'q': query, 'to': 100, 'ingr': 6})
     json = response.json()
 
     print(f'Query: {query} Results: {len(json["hits"])}')
@@ -39,14 +39,14 @@ if __name__ == "__main__":
     count = 0
 
     for meat in MEAT:
-        if count >= 4:
+        if count >= 3:
             break
 
         for additional in ADDITIONAL:
             search(f'{meat}, {additional}', data, seen)
             count += 1
 
-            if count >= 4:
+            if count >= 3:
                break
 
     with open('data.json', 'w') as file:
