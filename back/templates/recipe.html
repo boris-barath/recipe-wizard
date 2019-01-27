@@ -51,6 +51,7 @@
             </ol>
         </div>
     </div>
+    <p><a target="_blank" id="moreDetailsLink" href="#">Get more details of the recipe.</a></p>
 </section>
 
 <div id="bulma-pageloader" class="pageloader is-active"><span class="title">Loading...</span></div>
@@ -63,17 +64,19 @@
         id: window.location.pathname.slice(8),
       },
       type: "GET",
-      async: false,
+      async: true,
       success: function (res) {
         let directions = res.directions;
         let ingredients = res.ingredients;
         let kcal = res.calories;
         let name = res.name;
         let picSrc = res.url;
+        let websiteUrl = `https://www.allrecipes.com/recipe/${res.id}`;
 
         $('.recipe-title').text(name);
         $('.recipe-calories').text(`One serving has ${kcal}kcal 🔥`);
         $('.custom-img').attr('src', picSrc);
+        $('#moreDetailsLink').attr('href', websiteUrl);
 
         ingredients.forEach((ingredient) => {
           $('.ingredients').append(`<li>${ingredient.charAt(0).toUpperCase() + ingredient.slice(1)}</li>`);
