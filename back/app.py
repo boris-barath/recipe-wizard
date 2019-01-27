@@ -93,8 +93,8 @@ def questions():
 @app.route('/detail')
 def detail():
     rec_id = int(request.args.get('id'))
-    recipe = list(filter(lambda recipe: recipe.id == rec_id, recipes))[0]
-    other = {'name': recipe.name, 'ingredients': recipe.ingredients, 'directions': recipe.directions, 'url': get_photo(rec_id)}
+    rec = list(filter(lambda r: r.id == rec_id, recipes))[0]
+    other = {'name': rec.name, 'ingredients': rec.ingredients, 'directions': rec.directions, 'url': get_photo(rec_id)}
     return jsonify(other)
 
 
