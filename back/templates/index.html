@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Recipe Wizard</title>
 
     <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
     />
     <script
-            defer
-            src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+      defer
+      src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
     ></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-</head>
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  </head>
+  <!-- <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" href="/">
             <strong>Recipe Wizard</strong>
@@ -24,36 +24,52 @@
             <span aria-hidden="true"></span>
         </a>
     </div>
-    <!-- <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-primary"> <strong>Sign up</strong> </a>
-            <a class="button is-light"> Log in </a>
-          </div>
-        </div>
+</nav> -->
+
+  <section class="hero is-primary is-large">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">Recipe Wizard</h1>
+        <h2 class="subtitle">Find recipe ideas without shopping</h2>
       </div>
-    </div> -->
-</nav>
-<body>
-<section class="section">
-    <div class="container">
+    </div>
+  </section>
+  <body>
+    <section class="section">
+      <div class="container">
         <p class="subtitle">
-            Scan a receipt to see what you can cook with food you just bought
+          Scan a receipt to see what you can cook with food you just bought
         </p>
         <form action="/image" method="POST" enctype="multipart/form-data">
-            <p><a class="button is-primary is-fullwidth">
-                <label for="file-upload" class="custom-file-upload">Scan receipt</label>
+          <p>
+            <a class="button is-primary is-fullwidth">
+              <label for="file-upload" class="custom-file-upload"
+                >Scan receipt</label
+              >
             </a>
-            </p>
-            <input hidden name="file-upload" id="file-upload" type="file" accept="image/*" capture="camera"/>
+          </p>
+          <input
+            hidden
+            name="file-upload"
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            capture="camera"
+          />
         </form>
-    </div>
-</section>
+        <br />
+        <a href="/questions" class="button is-primary is-fullwidth"
+          >Go to questions</a
+        >
+      </div>
+    </section>
 
-<script>
-  $('form input').change(function() {
-    $(this).closest('form').submit();
-  });
-</script>
-</body>
+    <script>
+      $("form input").change(function() {
+        $(this)
+          .closest("form")
+          .submit();
+      });
+    </script>
+  </body>
 </html>
