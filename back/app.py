@@ -57,6 +57,10 @@ def get_photo(photo_id):
     page = requests.get("https://www.allrecipes.com/recipe/{}/".format(photo_id))
     soup = BeautifulSoup(page.content, 'html.parser')
     tag = soup.find(id="BI_openPhotoModal1")
+
+    if not tag:
+        tag = soup.find("img", {"class": "rec-photo"})
+
     return tag.attrs.get('src')
 
 
@@ -82,8 +86,10 @@ def questions():
 
 @app.route('/detail')
 def detail():
-    rec_id = request.args.get('id')
-    return render_template('detail.html', photo_src=get_photo(rec_id))
+    rec_id = int(request.args.get('id'))
+    recipe = list(filter(lambda recipe: recipe.id == rec_id, recipes))[0]
+    other = {'name': recipe.name, 'ingredients': recipe.ingredients, 'directions': recipe.directions, 'url': get_photo(rec_id)}
+    return jsonify(other)
 
 
 # post request here to upload image
@@ -149,9 +155,9 @@ def question():
     return jsonify(question)
 
 
-@app.route('/recipe', methods=['GET'])
+@app.route('/recipe/<id>', methods=['GET'])
 @cross_origin()
-def recipe():
+def recipe(id):
     return render_template('recipe.html')
 
 
