@@ -9,6 +9,7 @@ from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 from collections import defaultdict
+import numpy as np
 
 import requests
 from bs4 import BeautifulSoup
@@ -156,20 +157,26 @@ def question():
 
     available_recipes.extend(question['recipes'])
 
-    if len(available_recipes) == 0:
-        question['recipes'] = []
-    else:
-        max_views = max([recipe.views for recipe in available_recipes])
+    # if len(available_recipes) == 0:
+    #     question['recipes'] = []
+    # else:
+    #     max_views = max([recipe.views for recipe in available_recipes])
 
-        # get a random samble of all available recipes, faboring ones that have least number
-        # of views
-        question['recipes'] = random.choices(available_recipes,
-                weights = map(lambda recipe: max_views - recipe.views, available_recipes),
-                k = min(len(available_recipes), max_returned_recipes))
+    #     sum_views = sum([max_views - recipe.views + 1 for recipe in available_recipes])
 
-    # increase view count on all suggested recipes
-    for recipe in question['recipes']:
-        recipe.views += 1
+    #     # get a random samble of all available recipes, faboring ones that have least number
+    #     # of views
+    #     question['recipes'] = np.random.choice(available_recipes,
+    #             min(len(available_recipes), max_returned_recipes),
+    #             p = list(map(lambda recipe: (max_views - recipe.views + 1) / sum_views, available_recipes)),
+    #             replace = False)
+
+    # # increase view count on all suggested recipes
+    # for recipe in question['recipes']:
+    #     recipe.views += 1
+
+    available_recipes.sort(key = lambda recipe: recipe.difficulty)
+    question['recipes'] = available_recipes[:max_returned_recipes]
 
     question['recipes'] = list(map(lambda recipe: {'value': recipe.id, 'name': recipe.name}, question['recipes']))
 

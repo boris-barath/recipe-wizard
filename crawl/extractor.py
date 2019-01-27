@@ -11,7 +11,7 @@ class Recipe:
         self.ingredients = list(ingredients)
         self.directions = list(directions)
         self.is_impossible = False
-        self.views = 0
+        self.views = 1
 
     def impossible(self):
         self.is_impossible = True
