@@ -151,7 +151,7 @@ def main():
             suggestions = list(map(str, map(id, suggestions)))
             print(" ".join(suggestions))
 
-        print(f'Do you have: {question["question"]}')
+        print('Do you have: {question["question"]}')
 
         response = input("Do you have this ingredient: ")
         if response == 'yes':

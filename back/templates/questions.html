@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Recipe Wizard</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
+    <link rel="stylesheet" href="../static/bulma.min.css"/>
+      <link rel="stylesheet" href="../static/bulma-pageloader.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/style.css">
-    <script
+    <link rel="stylesheet" href="../static/style.css">
+      <script
       src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
     ></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="../static/jquery-3.3.1.min.js"></script>
   </head>
   <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -50,6 +51,10 @@
           <hr>
 
         <h1 class="custom-title">Recipes</h1>
+
+        <div class="recipes">
+
+        </div>
 
 
         <!-- <div class="columns is-mobile food-border">
@@ -125,10 +130,13 @@
 
     </div>
 
+    <div id="bulma-pageloader" class="pageloader is-active"><span class="title">Loading...</span></div>
+
     <script type="text/javascript">
       let latest;
 
       function addRecipes(recipes) {
+        $('.recipes').empty();
         for(var i = 0; i < recipes.length; i++) {
           var jedlo = `<a href="http://${window.location.host}/recipe/${recipes[i].value}">
                                     <div class="columns is-mobile food-border">
@@ -140,7 +148,7 @@
                                         </div>
                                     </div>
                                 </a>`;
-          $(".container").append(jedlo);
+          $(".recipes").append(jedlo);
         }
       }
 
@@ -154,6 +162,7 @@
               $(".title").text(`Do you have ${res.question}?`);
               addRecipes(res.recipes);
               latest = res.question;
+              $('#bulma-pageloader').removeClass('is-active');
             }});
         });
       });
@@ -189,6 +198,7 @@
             async: false,
             success : function(res) {
                 $(".title").text(`Do you have ${res.question}?`);
+                addRecipes(res.recipes);
                 latest = res.question;
             },
             error: function() {
@@ -196,6 +206,23 @@
             }}
       )});
 
+      $(".delete").click((e) => {
+        e.preventDefault();
+        console.log('removing element');
+        const elem = $(e.target);
+        const parent = elem.parent();
+        const text = parent.text();
+
+        $.ajax({
+          url: `http://${window.location.host}/remove?elem=${text}`,
+          type: "GET",
+          async: false,
+          success: () => {
+            console.log('removed ingredient');
+            parent.remove();
+          }
+        })
+      });
     </script>
   </body>
 </html>

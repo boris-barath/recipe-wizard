@@ -11,6 +11,18 @@
   padding-bottom: 10px;
 }
 
+.recipe-image {
+  text-align: center;
+}
+
+.ingredients {
+  list-style: circle;
+}
+
+.directions {
+  line-height: 23px;
+}
+
 .container {
   padding-top: 0px;
 }
@@ -56,20 +68,19 @@
   padding-top: 20px;
 }
 
-.custom-img {
-  height: 180px;
-  width: 100%;
-  opacity: 1;
+.recipe-image{
+  background: whitesmoke;
 }
 
-.recipe-name {
-  opacity: 0.8;
-  width: 100%;
-  position: absolute;
-  top: 177px;
-  z-index: 1000000000;
-  background-color: white;
-  padding: 10px;
+.recipe-title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 30px;
+  padding-top: 10px;
+}
+
+.custom-img {
+  height: 180px;
 }
 
 .food-border {
