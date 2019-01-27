@@ -82,8 +82,10 @@ def questions():
 
 @app.route('/detail')
 def detail():
-    rec_id = request.args.get('id')
-    return render_template('detail.html', photo_src=get_photo(rec_id))
+    rec_id = int(request.args.get('id'))
+    recipe = list(filter(lambda recipe: recipe.id == rec_id, recipes))[0]
+    other = {'name': recipe.name, 'ingredients': recipe.ingredients, 'directions': recipe.directions, 'url': get_photo(rec_id)}
+    return jsonify(other)
 
 
 # post request here to upload image
