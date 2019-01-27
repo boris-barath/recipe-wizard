@@ -62,6 +62,7 @@ def before():
 # static page for initial page
 @app.route('/')
 def home():
+    before()
     return render_template('index.html')
 
 
