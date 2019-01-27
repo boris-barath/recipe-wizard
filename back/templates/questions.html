@@ -37,12 +37,12 @@
 
         <h1 class="title" name="question"></h1>
         <div class="buttons title-buttons">
-            <a class="button is-medium is-outlined is-success">
+            <button id="yes-button" class="button is-medium is-outlined is-success">
             Yes
-            </a>
-            <a class="button is-medium is-outlined is-danger">
+            </button>
+            <button id="no-button" class="button is-medium is-outlined is-danger">
                 No
-            </a>
+            </button>
         </div>
 
           <progress class="progress is-primary" value="15" max="100">15%</progress>
@@ -53,7 +53,7 @@
         <h1 class="custom-title">Recipes</h1>
 
 
-        <div class="columns is-mobile food-border">
+        <!-- <div class="columns is-mobile food-border">
             <div class="column is-9">
                 <p class="food-title">Tika Panjabu</p>
             </div>
@@ -78,7 +78,7 @@
           <div class="column">
               🥜
           </div>
-      </div>
+      </div> -->
 
       </div>
       <br/>
@@ -126,19 +126,91 @@
 
     </div>
 
-    <script>
-      $( document ).ready(function() {
-        $.ajax({
-        url : "http://localhost:5000/question",
-        type : "get",
-        async: false,
-        success : function(data) {
-            console.log(data);
-            $(".title").text(`Do you have ${data}?`);
+    <script type="text/javascript">
+        var latest;
+
+        function handleNewQuestion(q) {
+            console.log("Updated latest");
+            latest = q;
         }
- });
+        function updateQuestion() {
+            $.ajax({
+                url : `http://${window.location.host}/question`,
+                type : "GET",
+                async: false,
+                success : function(vec) {
+                    handleNewQuestion(vec.question);
+                }
+            });
+        };
+
+      $( document ).ready(() => {
+        $.ajax({
+        url : `http://${window.location.host}/question`,
+        type : "GET",
+        async: false,
+        success : function(vec) {
+            console.log(vec);
+            $(".title").text(`Do you have ${vec.question}?`);
+            latest = vec.question;
+            console.log(latest);
+            for(var i = 0; i < vec.recipes.length; i++) {
+                var jedlo = `<a href="http://${window.location.host}/recipe">
+                                <div class="columns is-mobile food-border">
+                                    <div class="column is-9">
+                                        <p name="${vec.recipes[i].id}" class="food-title">${vec.recipes[i].name}</p>
+                                    </div>
+                                    <div class="column">
+                                        🥜
+                                    </div>
+                                </div>
+                            </a>`;
+            $(".container").append(jedlo);
+            }   
+        }
+        });
       });
 
+      $("#yes-button").click(() => {
+        var temp = latest;
+        $.ajax({
+        url : `http://${window.location.host}/question?response="yes"`,
+        type : "GET",
+        async: false,
+        success : function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+            $(".tags").append(`<span class="tag is-primary is-medium">${temp}<button class="delete is-small"></button></span>`);
+        },
+        error: function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+            $(".tags").append(`<span class="tag is-primary is-medium">${temp}<button class="delete is-small"></button></span>`);
+        }
+        
+      }
+      )});
+
+      $("#no-button").click(() => {
+        var temp = latest;
+        $.ajax({
+        url : `http://${window.location.host}/question?response="no"`,
+        type : "GET",
+        async: false,
+        success : function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+        },
+        error: function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+        }
+        
+      }
+      )});
+    //   <span class="tag is-primary is-medium">test<button class="delete is-small"></button></span>
+
+    //   <a href="http://${window.location.host}/recipe/${vec.recipes[i].id}">
 
     </script>
   </body>

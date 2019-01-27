@@ -1,7 +1,6 @@
-import uuid
-
-from flask import Flask, flash, request, redirect, render_template, jsonify
-# from flask_session import Session
+import copy
+from flask import Flask, flash, request, redirect, render_template, jsonify, session
+from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 
@@ -10,18 +9,21 @@ from bs4 import BeautifulSoup
 
 import os
 
-from back.receipt_detection import detect_ingredients
+from ..back.receipt_detection import detect_ingredients
+from ..crawl.extractor import get_data, return_question
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/'
-# app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = 'super secret key'
-# Session(app)
+Session(app)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+recipes, reverse_mapping = get_data('../crawl/recipes.json')
 
 
 def root_dir():  # pragma: no cover
@@ -62,6 +64,10 @@ def home():
 # page containing questions and final results
 @app.route('/questions')
 def questions():
+    session['state'] = {'recipes': copy.deepcopy(recipes), 'reverse_mapping': copy.deepcopy(reverse_mapping),
+                        'available': [], 'not_available': []}
+    session.modified = True
+
     return render_template('questions.html')
 
 
@@ -101,4 +107,30 @@ def upload_file():
 @app.route('/question', methods=['GET'])
 @cross_origin()
 def question():
-    return 'beris'
+    question_response = request.args.get('response', 'N/A')
+
+    if question_response == 'yes':
+        session['available'].append(session['previous_question'])
+    elif question_response == 'no':
+        session['not_available'].append(session['previous_question'])
+
+    state = session.get('state')
+    question = return_question(state['reverse_mapping'], state['recipes'],
+                               state['available'], state['not_available'])
+
+    return jsonify(question)
+    # return jsonify(
+    #     question="felup",
+    #     messages=[{name:"sushi", value:"123"}]
+    # )
+
+    # x = json.dumps({
+    #     "question":"hilfiger",
+    #     "recipes":[{"name": "kebab do ruky", "id":"123"},
+    #                 {"name": "guess, g-star", "id":"345"}]})
+    # return Response(x,  mimetype='application/json')
+
+@app.route('/recipe', methods=['GET'])
+@cross_origin()
+def recipe():
+    return render_template('recipe.html')
