@@ -127,7 +127,23 @@
     </div>
 
     <script type="text/javascript">
-        let latest;
+      let latest;
+
+      function addRecipes(recipes) {
+        for(var i = 0; i < recipes.length; i++) {
+          var jedlo = `<a href="http://${window.location.host}/recipe">
+                                    <div class="columns is-mobile food-border">
+                                        <div class="column is-9">
+                                            <p name="${recipes[i].id}" class="food-title">${recipes[i].name}</p>
+                                        </div>
+                                        <div class="column">
+                                            🥜
+                                        </div>
+                                    </div>
+                                </a>`;
+          $(".container").append(jedlo);
+        }
+      }
 
       $(document).ready(() => {
         $.ajax({
@@ -136,20 +152,8 @@
             async: true,
             success : function(res) {
                 $(".title").text(`Do you have ${res.question}?`);
+                addRecipes(res.recipes);
                 latest = res.question;
-                for(var i = 0; i < res.recipes.length; i++) {
-                    var jedlo = `<a href="http://${window.location.host}/recipe">
-                                    <div class="columns is-mobile food-border">
-                                        <div class="column is-9">
-                                            <p name="${res.recipes[i].id}" class="food-title">${res.recipes[i].name}</p>
-                                        </div>
-                                        <div class="column">
-                                            🥜
-                                        </div>
-                                    </div>
-                                </a>`;
-                $(".container").append(jedlo);
-                }
         }});
       });
 
@@ -164,6 +168,7 @@
             success : function(res) {
                 $(".title").text(`Do you have ${res.question}?`);
                 $(".tags").append(`<span class="tag is-primary is-medium">${latest}<button class="delete is-small"></button></span>`);
+                addRecipes(res.recipes);
                 latest = res.question;
             },
             error: function() {
@@ -185,7 +190,7 @@
             },
             error: function() {
               $(".title").text(`An error has occurred.`);
-        }}
+            }}
       )});
 
     //   <span class="tag is-primary is-medium">test<button class="delete is-small"></button></span>
