@@ -145,18 +145,16 @@ def question():
     session.modified = True
 
     return jsonify(question)
-    # return jsonify(
-    #     question="felup",
-    #     messages=[{name:"sushi", value:"123"}]
-    # )
 
-    # x = json.dumps({
-    #     "question":"hilfiger",
-    #     "recipes":[{"name": "kebab do ruky", "id":"123"},
-    #                 {"name": "guess, g-star", "id":"345"}]})
-    # return Response(x,  mimetype='application/json')
 
 @app.route('/recipe', methods=['GET'])
 @cross_origin()
 def recipe():
     return render_template('recipe.html')
+
+
+@app.route('/reset', methods=['GET'])
+@cross_origin()
+def reset():
+    session.pop('state')
+    return ''
