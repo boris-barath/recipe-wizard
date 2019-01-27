@@ -32,6 +32,7 @@
     </div>
   </nav>
   <body>
+
     <div>
         <img class="custom-img" src="https://slevomat.sgcdn.cz/images/t/728x364c/80/83/8083126-5e948f.jpg"/>
         <div class="recipe-name">
@@ -42,7 +43,7 @@
     <section class="section">
       <div class="container">
         <br>
-        <h4 class="subtitle is-4">Ingredients</h1>
+        <h4 class="subtitle is-4">Ingredients</h4>
 
         <div class="columns is-mobile">
             <div class="column is-9 is-offset-1">
@@ -65,13 +66,25 @@
                       <li>eat</li>
                   </ol>
               </div>
-          </div> 
-
-      <br/>
-
+          </div>
     </section>
 
 
-    </div>
+    <script>
+      $(document).ready(() => {
+        $.ajax({
+          url : `http://${window.location.host}/detail`,
+          data: {
+            id: window.location.pathname.slice(8),
+          },
+          type : "GET",
+          async: false,
+          success : function(res) {
+           console.log(res)
+          }
+        });
+      });
+    </script>
+
   </body>
 </html>

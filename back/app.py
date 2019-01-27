@@ -149,9 +149,9 @@ def question():
     return jsonify(question)
 
 
-@app.route('/recipe', methods=['GET'])
+@app.route('/recipe/<id>', methods=['GET'])
 @cross_origin()
-def recipe():
+def recipe(id):
     return render_template('recipe.html')
 
 
