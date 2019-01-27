@@ -145,8 +145,3 @@ def get_block_with_ingridients(blocks):
 
 def has_ingridient(line):
     return ingredient_database.contains_substr_of(line)
-
-
-if __name__ == "__main__":
-    for line in detect_ingredients("static/uploaded-file.jpg"):
-        print(line)

@@ -1,6 +1,6 @@
 import uuid
 
-from flask import Flask, flash, request, redirect, url_for, Response, session, render_template
+from flask import Flask, flash, request, redirect, render_template
 # from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
@@ -8,6 +8,8 @@ from flask_cors import CORS, cross_origin
 import os
 import random
 import string
+
+from back.receipt_detection import detect_ingredients
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -77,6 +79,9 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename('uploaded-file.jpg')
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        detected = detect_ingredients("static/uploaded-file.jpg")
+        print(detected)
+        flash(detected)
         return redirect('/questions')
     return 'unknown error'
 

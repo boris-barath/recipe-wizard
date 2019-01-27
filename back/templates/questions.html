@@ -111,9 +111,15 @@
         <div class="columns is-mobile tag-column">
             <div class="column">
                 <div class="tags">
-                    <span class="tag is-primary is-medium">Spaghetti <button class="delete is-small"></button></span>
-                    <span class="tag is-primary is-medium">Cucumber <button class="delete is-small"></button></span>
-                    <span class="tag is-primary is-medium">Ketchup <button class="delete is-small"></button></span>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages[0] %}
+                        <span class="tag is-primary is-medium">{{ message }} <button class="delete is-small"></button></span>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
                 </div>
             </div>
         </div>
