@@ -1,0 +1,32 @@
+Å´transitions⁄™[
+  {
+    "clas":0,
+    "move":1,
+    "label":"INGREDIENT",
+    "name":"B-INGREDIENT"
+  },
+  {
+    "clas":1,
+    "move":2,
+    "label":"INGREDIENT",
+    "name":"I-INGREDIENT"
+  },
+  {
+    "clas":2,
+    "move":3,
+    "label":"INGREDIENT",
+    "name":"L-INGREDIENT"
+  },
+  {
+    "clas":3,
+    "move":4,
+    "label":"INGREDIENT",
+    "name":"U-INGREDIENT"
+  },
+  {
+    "clas":4,
+    "move":5,
+    "label":"",
+    "name":"O"
+  }
+]
