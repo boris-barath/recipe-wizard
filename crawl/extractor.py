@@ -4,9 +4,12 @@ import random
 
 
 class Recipe:
-    def __init__(self, id, ingredients):
+    def __init__(self, id, name, calories, ingredients, directions):
         self.id = id
+        self.name = name
+        self.calories = calories
         self.ingredients = list(ingredients)
+        self.directions = list(directions)
         self.is_impossible = False
 
     def impossible(self):
@@ -104,7 +107,11 @@ def get_recipes(data):
     return map(lambda x:
                Recipe(
                    x.get('id'),
-                   map(lambda y: y.get('ingredient').lower(), x.get('ingredients'))),
+                   x.get('name'),
+                   x.get('calories'),
+                   map(lambda y: y.get('ingredient').lower(), x.get('ingredients')),
+                   map(lambda y: y.get('direction'), x.get('directions'))
+               ),
                data)
 
 
