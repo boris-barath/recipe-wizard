@@ -189,6 +189,20 @@ def question():
     return jsonify(question)
 
 
+@app.route('/shuffle', methods=['GET'])
+@cross_origin()
+def shuffle_recipes():
+    state = session.get('state')
+    # keep a list of all available recipes
+    available_recipes = state['available_recipes']
+    available_recipes = random.sample(available_recipes,
+                                      k=min(len(available_recipes), max_returned_recipes))
+    available_recipes = list(map(lambda recipe: {'value': recipe.id, 'name': recipe.name},
+                                 available_recipes))
+
+    return jsonify({'recipes': available_recipes})
+
+
 @app.route('/recipe/<id>', methods=['GET'])
 @cross_origin()
 def recipe(id):
@@ -208,6 +222,10 @@ def remove():
 @app.route('/reset', methods=['GET'])
 @cross_origin()
 def reset():
+    if len(session.get('state')['available']) == len(session.get('state')['fixed']) and len(session.get('state')['not_available']) == 0:
+        print('return')
+        return ''
+
     state = session.pop('state', {'fixed': []})
     before()
     session.get('state')['fixed'] = state['fixed']
