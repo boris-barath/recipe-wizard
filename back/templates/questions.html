@@ -35,6 +35,9 @@
             <button id="no-button" class="button is-medium is-outlined is-danger">
                 No
             </button>
+            <button id="shuffle-button" class="button is-medium is-outlined is-link">
+                Shuffle
+            </button>
         </div>
 
         <progress class="progress is-primary" value="0" max="100"></progress>
@@ -192,8 +195,22 @@
         async: false,
         success: function (res) {
           $(".title").text(`Do you have ${res.question}?`);
-          addRecipes(res.recipes);
           latest = res.question;
+        },
+        error: function () {
+          $(".title").text(`An error has occurred.`);
+        }
+      }
+    )
+  });
+
+  $("#shuffle-button").click(() => {
+    $.ajax({
+        url: `http://${window.location.host}/shuffle`,
+        type: "GET",
+        async: false,
+        success: function (res) {
+          addRecipes(res.recipes);
         },
         error: function () {
           $(".title").text(`An error has occurred.`);
