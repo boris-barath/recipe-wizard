@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="static/style.css">
     <script
       src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
     ></script>
@@ -35,7 +35,7 @@
     <section class="section">
       <div class="container">
 
-        <h1 class="title">Do you have garlic?</h1>
+        <h1 class="title" name="question"></h1>
         <div class="buttons title-buttons">
             <a class="button is-medium is-outlined is-success">
             Yes
@@ -111,9 +111,15 @@
         <div class="columns is-mobile tag-column">
             <div class="column">
                 <div class="tags">
-                    <span class="tag is-primary is-medium">Spaghetti <button class="delete is-small"></button></span>
-                    <span class="tag is-primary is-medium">Cucumber <button class="delete is-small"></button></span>
-                    <span class="tag is-primary is-medium">Ketchup <button class="delete is-small"></button></span>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages[0] %}
+                        <span class="tag is-primary is-medium">{{ message }} <button class="delete is-small"></button></span>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
                 </div>
             </div>
         </div>
@@ -122,10 +128,18 @@
 
     <script>
       $( document ).ready(function() {
-        $.get( "http://localhost:5000/question", function( data ) {
-          console.log(data);
-        });
+        $.ajax({
+        url : "http://localhost:5000/question",
+        type : "get",
+        async: false,
+        success : function(data) {
+            console.log(data);
+            $(".title").text(`Do you have ${data}?`);
+        }
+ });
       });
+
+
     </script>
   </body>
 </html>

@@ -1,22 +1,24 @@
 import uuid
 
-from flask import Flask, flash, request, redirect, url_for, Response, session
-from flask_session import Session
+from flask import Flask, flash, request, redirect, render_template, jsonify
+# from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 
-import os
-import random
-import string
+import requests
+from bs4 import BeautifulSoup
 
-UPLOAD_FOLDER = '../upload'
+import os
+
+from back.receipt_detection import detect_ingredients
+
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SESSION_TYPE'] = 'filesystem'
+app.config['UPLOAD_FOLDER'] = 'static/'
+# app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = 'super secret key'
-Session(app)
+# Session(app)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -39,28 +41,34 @@ def get_file(filename):  # pragma: no cover
         return str(exc)
 
 
-def generate_random_string():
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def get_photo(photo_id):
+    page = requests.get("https://www.allrecipes.com/recipe/{}/".format(photo_id))
+    soup = BeautifulSoup(page.content, 'html.parser')
+    tag = soup.find(id="BI_openPhotoModal1")
+    return tag.attrs.get('src')
+
+
 # static page for initial page
 @app.route('/')
 def home():
-    content = get_file('static/index.html')
-    return Response(content, mimetype="text/html")
+    return render_template('index.html')
 
 
 # page containing questions and final results
 @app.route('/questions')
 def questions():
-    content = get_file('static/questions.html')
-    session['session_id'] = uuid.uuid4()
-    return Response(content, mimetype="text/html")
+    return render_template('questions.html')
+
+
+@app.route('/detail')
+def detail():
+    rec_id = request.args.get('id')
+    return render_template('detail.html', photo_src=get_photo(rec_id))
 
 
 # post request here to upload image
@@ -81,6 +89,9 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename('uploaded-file.jpg')
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        detected = detect_ingredients("static/uploaded-file.jpg")
+        print(detected)
+        flash(detected)
         return redirect('/questions')
     return 'unknown error'
 

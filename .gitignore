@@ -186,3 +186,4 @@ typings/
 
 setup.sh
 back/flask_session
+creds.json
