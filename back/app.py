@@ -9,8 +9,6 @@ import requests
 from bs4 import BeautifulSoup
 
 import os
-import random
-import string
 
 from back.receipt_detection import detect_ingredients
 
@@ -43,13 +41,16 @@ def get_file(filename):  # pragma: no cover
         return str(exc)
 
 
-def generate_random_string():
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def get_photo(photo_id):
+    page = requests.get("https://www.allrecipes.com/recipe/{}/".format(photo_id))
+    soup = BeautifulSoup(page.content, 'html.parser')
+    tag = soup.find(id="BI_openPhotoModal1")
+    return tag.attrs.get('src')
 
 
 # static page for initial page
@@ -64,13 +65,10 @@ def questions():
     return render_template('questions.html')
 
 
-@app.route('/photo')
-def photo():
-    photo_id = request.args.get('id')
-    page = requests.get("https://www.allrecipes.com/recipe/{}/".format(photo_id))
-    soup = BeautifulSoup(page.content, 'html.parser')
-    tag = soup.find(id="BI_openPhotoModal1")
-    return jsonify(tag.attrs.get('src'))
+@app.route('/detail')
+def detail():
+    rec_id = request.args.get('id')
+    return render_template('detail.html', photo_src=get_photo(rec_id))
 
 
 # post request here to upload image
