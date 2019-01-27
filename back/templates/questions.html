@@ -35,7 +35,8 @@
     <section class="section">
       <div class="container">
 
-        <h1 class="title" name="question"></h1>
+        <h1 class="title"></h1>
+
         <div class="buttons title-buttons">
             <button id="yes-button" class="button is-medium is-outlined is-success">
             Yes
@@ -45,8 +46,7 @@
             </button>
         </div>
 
-          <progress class="progress is-primary" value="15" max="100">15%</progress>
-
+          <progress class="progress is-primary" value="0" max="100">0%</progress>
 
           <hr>
 
@@ -127,93 +127,67 @@
     </div>
 
     <script type="text/javascript">
-        var latest;
+        let latest;
 
-        function handleNewQuestion(q) {
-            console.log("Updated latest");
-            latest = q;
-        }
-        function updateQuestion() {
-            $.ajax({
-                url : `http://${window.location.host}/question`,
-                type : "GET",
-                async: false,
-                success : function(vec) {
-                    handleNewQuestion(vec.question);
-                }
-            });
-        };
-
-      $( document ).ready(() => {
+      $(document).ready(() => {
         $.ajax({
-        url : `http://${window.location.host}/question`,
-        type : "GET",
-        async: false,
-        success : function(vec) {
-            console.log(vec);
-            $(".title").text(`Do you have ${vec.question}?`);
-            latest = vec.question;
-            console.log(latest);
-            for(var i = 0; i < vec.recipes.length; i++) {
-                var jedlo = `<a href="http://${window.location.host}/recipe">
-                                <div class="columns is-mobile food-border">
-                                    <div class="column is-9">
-                                        <p name="${vec.recipes[i].id}" class="food-title">${vec.recipes[i].name}</p>
+            url : `http://${window.location.host}/question`,
+            type : "GET",
+            async: true,
+            success : function(res) {
+                $(".title").text(`Do you have ${res.question}?`);
+                latest = res.question;
+                for(var i = 0; i < res.recipes.length; i++) {
+                    var jedlo = `<a href="http://${window.location.host}/recipe">
+                                    <div class="columns is-mobile food-border">
+                                        <div class="column is-9">
+                                            <p name="${res.recipes[i].id}" class="food-title">${res.recipes[i].name}</p>
+                                        </div>
+                                        <div class="column">
+                                            🥜
+                                        </div>
                                     </div>
-                                    <div class="column">
-                                        🥜
-                                    </div>
-                                </div>
-                            </a>`;
-            $(".container").append(jedlo);
-            }   
-        }
-        });
+                                </a>`;
+                $(".container").append(jedlo);
+                }
+        }});
       });
 
       $("#yes-button").click(() => {
-        var temp = latest;
         $.ajax({
-        url : `http://${window.location.host}/question`,
-        data: {
-          response: "yes",
-        },
-        type : "GET",
-        async: false,
-        success : function() {
-            $(".title").text(`Do you have ${latest}?`);
-            updateQuestion();
-            $(".tags").append(`<span class="tag is-primary is-medium">${temp}<button class="delete is-small"></button></span>`);
-        },
-        error: function() {
-            $(".title").text(`Do you have ${latest}?`);
-            updateQuestion();
-            $(".tags").append(`<span class="tag is-primary is-medium">${temp}<button class="delete is-small"></button></span>`);
-        }
-        
-      }
+            url : `http://${window.location.host}/question`,
+            data: {
+              response: "yes",
+            },
+            type : "GET",
+            async: false,
+            success : function(res) {
+                $(".title").text(`Do you have ${res.question}?`);
+                $(".tags").append(`<span class="tag is-primary is-medium">${latest}<button class="delete is-small"></button></span>`);
+                latest = res.question;
+            },
+            error: function() {
+                $(".title").text(`An error has occurred.`);
+            }}
       )});
 
       $("#no-button").click(() => {
-        var temp = latest;
         $.ajax({
-        url : `http://${window.location.host}/question`,
-        data: {
-          response: "no",
-        },
-        type : "GET",
-        async: false,
-        success : function() {
-            $(".title").text(`Do you have ${latest}?`);
-            updateQuestion();
-        },
-        error: function() {
-            $(".title").text(`Do you have ${latest}?`);
-            updateQuestion();
-        }
-        
-      }
+            url : `http://${window.location.host}/question`,
+            data: {
+              response: "no",
+            },
+            type : "GET",
+            async: false,
+            success : function(res) {
+                $(".title").text(`Do you have ${res.question}?`);
+                latest = res.question;
+            },
+            error: function() {
+              $(".title").text(`An error has occurred.`);
+        }}
       )});
+
     //   <span class="tag is-primary is-medium">test<button class="delete is-small"></button></span>
 
     //   <a href="http://${window.location.host}/recipe/${vec.recipes[i].id}">
