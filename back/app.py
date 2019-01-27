@@ -189,6 +189,22 @@ def question():
     return jsonify(question)
 
 
+@app.route('/shuffle', methods=['GET'])
+@cross_origin()
+def shuffle_recipes():
+    state = session.get('state')
+    # keep a list of all available recipes
+    available_recipes = state['available_recipes']
+    available_recipes = random.sample(available_recipes,
+            k = min(len(available_recipes), max_returned_recipes))
+    available_recipes = list(map(lambda recipe: {'value': recipe.id, 'name': recipe.name},
+        available_recipes))
+
+    print(available_recipes)
+
+    return jsonify(available_recipes)
+
+
 @app.route('/recipe/<id>', methods=['GET'])
 @cross_origin()
 def recipe(id):
