@@ -109,7 +109,6 @@ def upload_file():
         session.get('state')['fixed'] = filtered
         session.modified = True
 
-        print(filtered)
         flash(filtered)
         return redirect('/questions')
     return 'unknown error'
