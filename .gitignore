@@ -187,3 +187,4 @@ typings/
 setup.sh
 back/flask_session
 creds.json
+back/static/uploaded-file.jpg
