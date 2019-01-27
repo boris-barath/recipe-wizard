@@ -1,17 +1,14 @@
 import copy
 
-import pickle
-
 import spacy
 import random
 from flask import Flask, flash, request, redirect, render_template, jsonify, session
 from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
-from collections import defaultdict
-import numpy as np
 
 import requests
+import requests_cache
 from bs4 import BeautifulSoup
 
 import os
@@ -34,6 +31,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 recipes, reverse_mapping = get_data('../crawl/recipes.json')
 nlp = spacy.load('../model/')
+
+requests_cache.install_cache('req_cache')
 
 
 def root_dir():  # pragma: no cover
@@ -95,7 +94,7 @@ def detail():
     rec_id = int(request.args.get('id'))
     rec = list(filter(lambda r: r.id == rec_id, recipes))[0]
     other = {'name': rec.name, 'ingredients': rec.ingredients, 'directions': rec.directions, 'calories': rec.calories,
-             'url': get_photo(rec_id)}
+             'url': get_photo(rec_id), 'id': rec_id}
     return jsonify(other)
 
 

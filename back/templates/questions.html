@@ -149,11 +149,9 @@
 
         for (var i = 0; i < Object.keys(foods).length; i++) {
           if (str.toLowerCase().includes(Object.keys(foods)[i])) {
-            console.log(foods[Object.keys(foods)[i]]);
             return foods[Object.keys(foods)[i]];
           }
         }
-        console.log("nothing");
         return "";
       }
 
@@ -192,7 +190,7 @@
           $.ajax({
             url: `http://${window.location.host}/question`,
             type: "GET",
-            async: false,
+            async: true,
             success: function(res) {
               $(".title").text(`Do you have ${res.question}?`);
               addRecipes(res.recipes);
@@ -210,7 +208,7 @@
             response: "yes"
           },
           type: "GET",
-          async: false,
+          async: true,
           success: function(res) {
             $(".title").text(`Do you have ${res.question}?`);
             $(".tags").append(
@@ -234,7 +232,7 @@
             response: "no"
           },
           type: "GET",
-          async: false,
+          async: true,
           success: function(res) {
             $(".title").text(`Do you have ${res.question}?`);
             latest = res.question;
@@ -249,7 +247,7 @@
         $.ajax({
           url: `http://${window.location.host}/shuffle`,
           type: "GET",
-          async: false,
+          async: true,
           success: function(res) {
             addRecipes(res.recipes);
           },
@@ -261,7 +259,6 @@
 
       $(".delete").click(e => {
         e.preventDefault();
-        console.log("removing element");
         const elem = $(e.target);
         const parent = elem.parent();
         const text = parent.text();
@@ -269,9 +266,8 @@
         $.ajax({
           url: `http://${window.location.host}/remove?elem=${text}`,
           type: "GET",
-          async: false,
+          async: true,
           success: () => {
-            console.log("removed ingredient");
             parent.remove();
           }
         });
