@@ -9,6 +9,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
     />
+    <link rel="stylesheet" href="static/bulma-pageloader.min.css">
     <script
             defer
             src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
@@ -50,8 +51,11 @@
     </div>
 </section>
 
+<div id="bulma-pageloader" class="pageloader"><span class="title">Loading...</span></div>
+
 <script>
   $('form input').change(function() {
+    $('#bulma-pageloader').addClass('is-active');
     $(this).closest('form').submit();
   });
 </script>
