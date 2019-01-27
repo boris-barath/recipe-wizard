@@ -94,7 +94,8 @@ def questions():
 def detail():
     rec_id = int(request.args.get('id'))
     rec = list(filter(lambda r: r.id == rec_id, recipes))[0]
-    other = {'name': rec.name, 'ingredients': rec.ingredients, 'directions': rec.directions, 'url': get_photo(rec_id)}
+    other = {'name': rec.name, 'ingredients': rec.ingredients, 'directions': rec.directions, 'calories': rec.calories,
+             'url': get_photo(rec_id)}
     return jsonify(other)
 
 
@@ -142,7 +143,6 @@ def upload_file():
 def question():
     question_response = request.args.get('response', 'N/A')
 
-
     if question_response == 'yes':
         session['state']['available'].append(session['previous_question'])
     elif question_response == 'no':
@@ -175,7 +175,7 @@ def question():
     # for recipe in question['recipes']:
     #     recipe.views += 1
 
-    available_recipes.sort(key = lambda recipe: recipe.difficulty)
+    available_recipes.sort(key=lambda recipe: recipe.difficulty)
     question['recipes'] = available_recipes[:max_returned_recipes]
 
     question['recipes'] = list(map(lambda recipe: {'value': recipe.id, 'name': recipe.name}, question['recipes']))

@@ -29,6 +29,7 @@
 </div>
 
 <h1 class="recipe-title">Name</h1>
+<h4 class="recipe-calories"> kcal</h4>
 
 <section class="section">
     <div class="container">
@@ -66,10 +67,12 @@
       success: function (res) {
         let directions = res.directions;
         let ingredients = res.ingredients;
+        let kcal = res.calories;
         let name = res.name;
         let picSrc = res.url;
 
         $('.recipe-title').text(name);
+        $('.recipe-calories').text(`One serving has ${kcal}kcal 🔥`);
         $('.custom-img').attr('src', picSrc);
 
         ingredients.forEach((ingredient) => {
