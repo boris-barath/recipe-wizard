@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from google.cloud import vision
 import io
 import string

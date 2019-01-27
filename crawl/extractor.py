@@ -41,7 +41,7 @@ def return_question(reverse_mapping, recipes, available, not_available):
     to_remove = []
     ret = {
             "available_recipes": [],
-            "next_question": None
+            "recipes": None
           }
 
     print("number of available recipes: ", len(recipes))
@@ -58,7 +58,7 @@ def return_question(reverse_mapping, recipes, available, not_available):
                 recipe.ingredients.remove(item)
 
         if len(recipe.ingredients) == 0:
-            ret["available_recipes"].append(recipe)
+            ret["recipes"].append(recipe)
             to_remove.append(i)
 
     for i in to_remove[::-1]:
@@ -98,7 +98,7 @@ def return_question(reverse_mapping, recipes, available, not_available):
 
     print(difficulty, ingredient_difficulty)
 
-    ret["next_question"] = easiest_ingredient
+    ret["question"] = easiest_ingredient
 
     return ret
 
@@ -140,7 +140,7 @@ def main():
     while True:
         question = return_question(reverse_mapping, recipes, available, not_available)
 
-        available_recipes.extend(question["available_recipes"])
+        available_recipes.extend(question["recipes"])
         if available_recipes:
             k = min(len(available_recipes), n_of_recipes)
             suggestions = random.sample(available_recipes, k)
@@ -150,13 +150,13 @@ def main():
             suggestions = list(map(str, map(id, suggestions)))
             print(" ".join(suggestions))
 
-        print(f'Do you have: {question["next_question"]}')
+        print(f'Do you have: {question["question"]}')
 
         response = input("Do you have this ingredient: ")
         if response == 'yes':
-            available.append(question["next_question"])
+            available.append(question["question"])
         else:
-            not_available.append(question["next_question"])
+            not_available.append(question["question"])
 
 if __name__ == "__main__":
     main()
