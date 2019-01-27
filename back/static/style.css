@@ -15,6 +15,10 @@
   text-align: center;
 }
 
+.recipe-calories {
+  text-align: center;
+}
+
 .ingredients {
   list-style: circle;
 }
@@ -84,6 +88,7 @@
 }
 
 .food-border {
+  padding-top: 5px;
   border-bottom: 1px solid #eeeeee;
 }
 
@@ -91,6 +96,7 @@
   max-height: 100%;
   overflow: scroll;
   padding-bottom: 30px;
+  padding-top: 5px;
 }
 
 .tag {
