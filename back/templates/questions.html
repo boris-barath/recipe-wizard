@@ -1,55 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Recipe Wizard</title>
 
-    <link rel="stylesheet" href="../static/bulma.min.css"/>
-    <link rel="stylesheet" href="../static/bulma-pageloader.min.css"/>
+    <link rel="stylesheet" href="../static/bulma.min.css" />
+    <link rel="stylesheet" href="../static/bulma-pageloader.min.css" />
     <script src="../static/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" href="../static/style.css">
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../static/style.css" />
 
     <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-</head>
+  </head>
 
-<body>
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-            <strong>Recipe Wizard</strong>
-        </a>
-    </div>
-</nav>
+  <body>
+    <nav
+      class="navbar is-primary"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/"> <strong>Recipe Wizard</strong> </a>
+      </div>
+    </nav>
 
-<section class="section">
-    <div class="container">
-
+    <section class="section">
+      <div class="container">
         <h1 class="title"></h1>
 
         <div class="buttons title-buttons">
-            <button id="yes-button" class="button is-medium is-outlined is-success">
-                Yes
-            </button>
-            <button id="no-button" class="button is-medium is-outlined is-danger">
-                No
-            </button>
-            <button id="shuffle-button" class="button is-medium is-outlined is-link">
-                Shuffle
-            </button>
+          <button
+            id="yes-button"
+            class="button is-medium is-outlined is-success"
+          >
+            Yes
+          </button>
+          <button id="no-button" class="button is-medium is-outlined is-danger">
+            No
+          </button>
+          <button
+            id="shuffle-button"
+            class="button is-medium is-outlined is-link"
+          >
+            Shuffle
+          </button>
         </div>
 
         <progress class="progress is-primary" value="0" max="100"></progress>
-        <hr>
+        <hr />
 
         <h1 class="custom-title">Recipes</h1>
 
-        <div class="recipes">
-
-        </div>
-
+        <div class="recipes"></div>
 
         <!-- <div class="columns is-mobile food-border">
             <div class="column is-9">
@@ -77,166 +85,198 @@
               🥜
           </div>
       </div> -->
+      </div>
+      <br />
+    </section>
 
+    <div class="inventory-button">
+      <div class="close" onclick="$('.notification').toggleClass('active')">
+        <div class="text"><i class="fas fa-sort-up"></i></div>
+      </div>
     </div>
-    <br/>
 
-</section>
-
-<div class="inventory-button">
-    <div class="close" onclick="$('.notification').toggleClass('active')">
-        <div class="text">
-            <i class="fas fa-sort-up"></i>
-        </div>
-    </div>
-</div>
-
-<div class="notification active">
-
-    <div class="columns is-mobile">
-        <div class="column is-9">
-            <p class="is-5">Your pantry 🍎</p>
-        </div>
+    <div class="notification active">
+      <div class="columns is-mobile">
+        <div class="column is-9"><p class="is-5">Your pantry 🍎</p></div>
         <div class="column">
-            <div class="close" onclick="$('.notification').toggleClass('active')">
-                <div class="text">
-                    <i class="fas fa-sort-down"></i>
-                </div>
-            </div>
+          <div class="close" onclick="$('.notification').toggleClass('active')">
+            <div class="text"><i class="fas fa-sort-down"></i></div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="columns is-mobile tag-column">
+      <div class="columns is-mobile tag-column">
         <div class="column">
-            <div class="tags">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                <ul class=flashes>
-                    {% for message in messages[0] %}
-                    <span class="tag is-primary is-medium">{{ message }} <button
-                            class="delete is-small"></button></span>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                {% endwith %}
-            </div>
+          <div class="tags">
+            {% with messages = get_flashed_messages() %} {% if messages %}
+            <ul class="flashes">
+              {% for message in messages[0] %}
+              <span class="tag is-primary is-medium"
+                >{{ message }} <button class="delete is-small"></button
+              ></span>
+              {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
+          </div>
         </div>
+      </div>
     </div>
 
-</div>
+    <div id="bulma-pageloader" class="pageloader is-active">
+      <span class="title">Loading...</span>
+    </div>
 
-<div id="bulma-pageloader" class="pageloader is-active"><span class="title">Loading...</span></div>
+    <script type="text/javascript">
+      function getEmoji(str) {
+        const foods = {
+          egg: "🍳",
+          eggs: "🍳",
+          noodles: "🍝",
+          spaghetti: "🍝",
+          pasta: "🍝",
+          spaetzle: "🍝",
+          chicken: "🍗",
+          beef: "🥩",
+          pork: "🐷",
+          fish: "🐟",
+          vegetable: "🥬",
+          fruit: "🍏",
+          soup: "🍜",
+          cake: "🧁",
+          milk: "🥛",
+          dairy: "🥛",
+          frozen: "🍦"
+        };
 
-<script type="text/javascript">
-  let latest;
+        for (var i = 0; i < Object.keys(foods).length; i++) {
+          if (str.toLowerCase().includes(Object.keys(foods)[i])) {
+            console.log(foods[Object.keys(foods)[i]]);
+            return foods[Object.keys(foods)[i]];
+          }
+        }
+        console.log("nothing");
+        return "";
+      }
 
-  function addRecipes(recipes) {
-    $('.recipes').empty();
-    for (var i = 0; i < recipes.length; i++) {
-      var jedlo = `<a href="http://${window.location.host}/recipe/${recipes[i].value}">
+      let latest;
+
+      function addRecipes(recipes) {
+        $(".recipes").empty();
+        for (var i = 0; i < recipes.length; i++) {
+          var recipe = recipes[i].name;
+          var emoji = getEmoji(recipe);
+          var jedlo = `<a href="http://${window.location.host}/recipe/${
+            recipes[i].value
+          }">
                                     <div class="columns is-mobile food-border">
                                         <div class="column is-9">
-                                            <p name="${recipes[i].value}" class="food-title">${recipes[i].name}</p>
+                                            <p name="${
+                                              recipes[i].value
+                                            }" class="food-title">${
+            recipes[i].name
+          }</p>
                                         </div>
                                         <div class="column">
-                                            🥜
+                                            ${emoji}
                                         </div>
                                     </div>
                                 </a>`;
-      $(".recipes").append(jedlo);
-    }
-  }
-
-  $(document).ready(() => {
-    $.ajax({url: `http://${window.location.host}/reset`, type: "GET"}).then(() => {
-      $.ajax({
-        url: `http://${window.location.host}/question`,
-        type: "GET",
-        async: false,
-        success: function (res) {
-          $(".title").text(`Do you have ${res.question}?`);
-          addRecipes(res.recipes);
-          latest = res.question;
-          $('#bulma-pageloader').removeClass('is-active');
+          $(".recipes").append(jedlo);
         }
+      }
+
+      $(document).ready(() => {
+        $.ajax({
+          url: `http://${window.location.host}/reset`,
+          type: "GET"
+        }).then(() => {
+          $.ajax({
+            url: `http://${window.location.host}/question`,
+            type: "GET",
+            async: false,
+            success: function(res) {
+              $(".title").text(`Do you have ${res.question}?`);
+              addRecipes(res.recipes);
+              latest = res.question;
+              $("#bulma-pageloader").removeClass("is-active");
+            }
+          });
+        });
       });
-    });
-  });
 
-  $("#yes-button").click(() => {
-    $.ajax({
-        url: `http://${window.location.host}/question`,
-        data: {
-          response: "yes",
-        },
-        type: "GET",
-        async: false,
-        success: function (res) {
-          $(".title").text(`Do you have ${res.question}?`);
-          $(".tags").append(`<span class="tag is-primary is-medium">${latest}<button class="delete is-small"></button></span>`);
-          $progress = $('.progress');
-          $progress.attr('value', parseInt($progress.attr('value')) + 10);
-          addRecipes(res.recipes);
-          latest = res.question;
-        },
-        error: function () {
-          $(".title").text(`An error has occurred.`);
-        }
-      }
-    )
-  });
+      $("#yes-button").click(() => {
+        $.ajax({
+          url: `http://${window.location.host}/question`,
+          data: {
+            response: "yes"
+          },
+          type: "GET",
+          async: false,
+          success: function(res) {
+            $(".title").text(`Do you have ${res.question}?`);
+            $(".tags").append(
+              `<span class="tag is-primary is-medium">${latest}<button class="delete is-small"></button></span>`
+            );
+            $progress = $(".progress");
+            $progress.attr("value", parseInt($progress.attr("value")) + 10);
+            addRecipes(res.recipes);
+            latest = res.question;
+          },
+          error: function() {
+            $(".title").text(`An error has occurred.`);
+          }
+        });
+      });
 
-  $("#no-button").click(() => {
-    $.ajax({
-        url: `http://${window.location.host}/question`,
-        data: {
-          response: "no",
-        },
-        type: "GET",
-        async: false,
-        success: function (res) {
-          $(".title").text(`Do you have ${res.question}?`);
-          latest = res.question;
-        },
-        error: function () {
-          $(".title").text(`An error has occurred.`);
-        }
-      }
-    )
-  });
+      $("#no-button").click(() => {
+        $.ajax({
+          url: `http://${window.location.host}/question`,
+          data: {
+            response: "no"
+          },
+          type: "GET",
+          async: false,
+          success: function(res) {
+            $(".title").text(`Do you have ${res.question}?`);
+            latest = res.question;
+          },
+          error: function() {
+            $(".title").text(`An error has occurred.`);
+          }
+        });
+      });
 
-  $("#shuffle-button").click(() => {
-    $.ajax({
-        url: `http://${window.location.host}/shuffle`,
-        type: "GET",
-        async: false,
-        success: function (res) {
-          addRecipes(res.recipes);
-        },
-        error: function () {
-          $(".title").text(`An error has occurred.`);
-        }
-      }
-    )
-  });
+      $("#shuffle-button").click(() => {
+        $.ajax({
+          url: `http://${window.location.host}/shuffle`,
+          type: "GET",
+          async: false,
+          success: function(res) {
+            addRecipes(res.recipes);
+          },
+          error: function() {
+            $(".title").text(`An error has occurred.`);
+          }
+        });
+      });
 
-  $(".delete").click((e) => {
-    e.preventDefault();
-    console.log('removing element');
-    const elem = $(e.target);
-    const parent = elem.parent();
-    const text = parent.text();
+      $(".delete").click(e => {
+        e.preventDefault();
+        console.log("removing element");
+        const elem = $(e.target);
+        const parent = elem.parent();
+        const text = parent.text();
 
-    $.ajax({
-      url: `http://${window.location.host}/remove?elem=${text}`,
-      type: "GET",
-      async: false,
-      success: () => {
-        console.log('removed ingredient');
-        parent.remove();
-      }
-    })
-  });
-</script>
-</body>
+        $.ajax({
+          url: `http://${window.location.host}/remove?elem=${text}`,
+          type: "GET",
+          async: false,
+          success: () => {
+            console.log("removed ingredient");
+            parent.remove();
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
