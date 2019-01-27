@@ -3,10 +3,12 @@ import copy
 import pickle
 
 import spacy
+import random
 from flask import Flask, flash, request, redirect, render_template, jsonify, session
 from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
+from collections import defaultdict
 
 import requests
 from bs4 import BeautifulSoup
@@ -17,6 +19,8 @@ from ..back.receipt_detection import detect_ingredients
 from ..crawl.extractor import get_data, return_question
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+max_returned_recipes = 5
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/'
@@ -68,7 +72,8 @@ def get_photo(photo_id):
 def before():
     if session.get('state', None) is None:
         session['state'] = {'recipes': copy.deepcopy(recipes), 'reverse_mapping': copy.deepcopy(reverse_mapping),
-                            'available': [], 'not_available': [], 'fixed': []}
+                            'available': [], 'not_available': [], 'fixed': [],
+                            'available_recipes': []}
         session.modified = True
 
 
@@ -136,14 +141,36 @@ def upload_file():
 def question():
     question_response = request.args.get('response', 'N/A')
 
+
     if question_response == 'yes':
         session['state']['available'].append(session['previous_question'])
     elif question_response == 'no':
         session['state']['not_available'].append(session['previous_question'])
 
     state = session.get('state')
+
+    # keep a list of all available recipes
+    available_recipes = state['available_recipes']
     question = return_question(state['reverse_mapping'], state['recipes'],
                                state['available'], state['not_available'])
+
+    available_recipes.extend(question['recipes'])
+
+    if len(available_recipes) == 0:
+        question['recipes'] = []
+    else:
+        max_views = max([recipe.views for recipe in available_recipes])
+
+        # get a random samble of all available recipes, faboring ones that have least number
+        # of views
+        question['recipes'] = random.choices(available_recipes,
+                weights = map(lambda recipe: max_views - recipe.views, available_recipes),
+                k = min(len(available_recipes), max_returned_recipes))
+
+    # increase view count on all suggested recipes
+    for recipe in question['recipes']:
+        recipe.views += 1
+
     question['recipes'] = list(map(lambda recipe: {'value': recipe.id, 'name': recipe.name}, question['recipes']))
 
     print(question)
