@@ -208,6 +208,10 @@ def remove():
 @app.route('/reset', methods=['GET'])
 @cross_origin()
 def reset():
+    if len(session.get('state')['available']) == len(session.get('state')['fixed']) and len(session.get('state')['not_available']) == 0:
+        print('return')
+        return ''
+
     state = session.pop('state', {'fixed': []})
     before()
     session.get('state')['fixed'] = state['fixed']
