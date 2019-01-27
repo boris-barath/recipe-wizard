@@ -16,7 +16,7 @@ import os
 from ..back.receipt_detection import detect_ingredients
 from ..crawl.extractor import get_data, return_question
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 max_returned_recipes = 5
 
@@ -33,23 +33,6 @@ recipes, reverse_mapping = get_data('../crawl/recipes.json')
 nlp = spacy.load('../model/')
 
 requests_cache.install_cache('req_cache')
-
-
-def root_dir():  # pragma: no cover
-    return os.path.abspath(os.path.dirname(__file__))
-
-
-def get_file(filename):  # pragma: no cover
-    try:
-        src = os.path.join(root_dir(), filename)
-        # Figure out how flask returns static files
-        # Tried:
-        # - render_template
-        # - send_file
-        # This should not be so non-obvious
-        return open(src).read()
-    except IOError as exc:
-        return str(exc)
 
 
 def allowed_file(filename):
@@ -221,7 +204,8 @@ def remove():
 @app.route('/reset', methods=['GET'])
 @cross_origin()
 def reset():
-    if len(session.get('state')['available']) == len(session.get('state')['fixed']) and len(session.get('state')['not_available']) == 0:
+    if len(session.get('state')['available']) == len(session.get('state')['fixed']) and len(
+            session.get('state')['not_available']) == 0:
         print('return')
         return ''
 
