@@ -1,6 +1,5 @@
 from collections import defaultdict
 import json
-import random
 
 
 class Recipe:
@@ -127,38 +126,3 @@ def get_data(path='recipes.json'):
                 reverse_mapping[ingredient].append(recipe)
 
         return recipes, reverse_mapping
-
-
-def main():
-    recipes, reverse_mapping = get_data()
-
-    n_of_recipes = 3
-
-    available = []
-    not_available = []
-    available_recipes = []
-
-    while True:
-        question = return_question(reverse_mapping, recipes, available, not_available)
-
-        available_recipes.extend(question["recipes"])
-        if available_recipes:
-            k = min(len(available_recipes), n_of_recipes)
-            suggestions = random.sample(available_recipes, k)
-
-            for recipe in suggestions:
-                available_recipes.remove(recipe)
-            suggestions = list(map(str, map(id, suggestions)))
-            print(" ".join(suggestions))
-
-        print('Do you have: {question["question"]}')
-
-        response = input("Do you have this ingredient: ")
-        if response == 'yes':
-            available.append(question["question"])
-        else:
-            not_available.append(question["question"])
-
-
-if __name__ == "__main__":
-    main()
