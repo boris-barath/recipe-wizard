@@ -51,7 +51,6 @@ def get_photo(photo_id):
     return tag.attrs.get('src')
 
 
-@app.before_request
 def before():
     if session.get('state', None) is None:
         session['state'] = {'recipes': copy.deepcopy(recipes), 'reverse_mapping': copy.deepcopy(reverse_mapping),
@@ -84,9 +83,6 @@ def detail():
 # post request here to upload image
 @app.route('/image', methods=['POST'])
 def upload_file():
-    # if not session.get('username'):
-    #     return 'user does not exist'
-
     # check if the post request has the file part
     if 'file-upload' not in request.files:
         return 'No file part'
