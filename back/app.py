@@ -163,5 +163,4 @@ def reset():
     session.get('state')['fixed'] = state['fixed']
     session.get('state')['available'] = state['fixed']
     session.modified = True
-    print(session.get('state'))
     return ''
