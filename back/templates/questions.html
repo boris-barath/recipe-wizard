@@ -150,12 +150,10 @@
 
         for (var i = 0; i < Object.keys(foods).length; i++) {
           if (str.toLowerCase().includes(Object.keys(foods)[i])) {
-            console.log(foods[Object.keys(foods)[i]]);
             return foods[Object.keys(foods)[i]];
           }
         }
-        console.log("nothing");
-        return "";
+        return "🍴";
       }
 
       let latest;
