@@ -33,8 +33,8 @@ def return_question(reverse_mapping, recipes, available, not_available):
     """
     Returns dictionary
     {
-        available_recipe: [...],
-        next_question: <number>
+        available_recipes: [...],
+        next_question: <string>
     }
 
     """
@@ -115,8 +115,8 @@ def get_recipes(data):
                data)
 
 
-def get_data():
-    with open('recipes.json', 'r') as file:
+def get_data(path='recipes.json'):
+    with open(path, 'r') as file:
         data = json.loads(file.read())
         recipes = list(filter(lambda x: len(x.ingredients) > 0, get_recipes(data)))
 
