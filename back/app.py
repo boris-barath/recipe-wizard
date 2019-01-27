@@ -1,9 +1,12 @@
 import uuid
 
-from flask import Flask, flash, request, redirect, render_template
+from flask import Flask, flash, request, redirect, render_template, jsonify
 # from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
+
+import requests
+from bs4 import BeautifulSoup
 
 import os
 import random
@@ -59,6 +62,15 @@ def home():
 @app.route('/questions')
 def questions():
     return render_template('questions.html')
+
+
+@app.route('/photo')
+def photo():
+    photo_id = request.args.get('id')
+    page = requests.get("https://www.allrecipes.com/recipe/{}/".format(photo_id))
+    soup = BeautifulSoup(page.content, 'html.parser')
+    tag = soup.find(id="BI_openPhotoModal1")
+    return jsonify(tag.attrs.get('src'))
 
 
 # post request here to upload image
