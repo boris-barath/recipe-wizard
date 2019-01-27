@@ -126,18 +126,23 @@
 
     </div>
 
-    <script>
+    <script type="text/javascript">
         var latest;
-        // function updateQuestion() {
-        //     $.ajax({
-        //         url : `http://${window.location.host}/question`,
-        //         type : "GET",
-        //         async: false,
-        //         success : function(vec) {
-        //             return(vec);
-        //         }   
-        //     });
-        // };
+
+        function handleNewQuestion(q) {
+            console.log("Updated latest");
+            latest = q;
+        }
+        function updateQuestion() {
+            $.ajax({
+                url : `http://${window.location.host}/question`,
+                type : "GET",
+                async: false,
+                success : function(vec) {
+                    handleNewQuestion(vec.question);
+                }
+            });
+        };
 
       $( document ).ready(() => {
         $.ajax({
@@ -166,29 +171,43 @@
         });
       });
 
-    //   $("#yes-button").click(() => {
-    //     var temp = latest;
-    //     $.ajax({
-    //     url : `http://${window.location.host}/question?response="yes"`,
-    //     type : "GET",
-    //     async: false,
-    //     success : function() {
-    //         console.log("ajdskhbfgji");
-    //         var latest = updateQuestion().question;
-    //         $(".title").text(`Do you have ${latest}?`);
-    //         console.log("krok");
-    //         $(".flashes").append(`<div>${temp}</div>`)
-    //     },
-    //     error: function() {
-    //         console.log("ajdskhbfgji");
-    //         var latest = updateQuestion().question;
-    //         $(".title").text(`Do you have ${latest}?`);
-    //         console.log("krok");
-    //         $(".flashes").append(`<div>${temp}</div>`)
-    //     }
+      $("#yes-button").click(() => {
+        var temp = latest;
+        $.ajax({
+        url : `http://${window.location.host}/question?response="yes"`,
+        type : "GET",
+        async: false,
+        success : function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+            $(".tags").append(`<span class="tag is-primary is-medium">${temp}<button class="delete is-small"></button></span>`);
+        },
+        error: function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+            $(".tags").append(`<span class="tag is-primary is-medium">${temp}<button class="delete is-small"></button></span>`);
+        }
         
-    //   }
-    //   )});
+      }
+      )});
+
+      $("#no-button").click(() => {
+        var temp = latest;
+        $.ajax({
+        url : `http://${window.location.host}/question?response="no"`,
+        type : "GET",
+        async: false,
+        success : function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+        },
+        error: function() {
+            $(".title").text(`Do you have ${latest}?`);
+            updateQuestion();
+        }
+        
+      }
+      )});
     //   <span class="tag is-primary is-medium">test<button class="delete is-small"></button></span>
 
     //   <a href="http://${window.location.host}/recipe/${vec.recipes[i].id}">

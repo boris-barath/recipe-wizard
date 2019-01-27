@@ -107,7 +107,7 @@ def question():
     #     messages=[{name:"sushi", value:"123"}]
     # )
     x = json.dumps({
-        "question":"hilfiger", 
+        "question":"tester", 
         "recipes":[{"name": "kebab do ruky", "id":"123"}, 
                     {"name": "guess, g-star", "id":"345"}]})
     return Response(x,  mimetype='application/json')
