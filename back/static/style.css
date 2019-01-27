@@ -92,6 +92,20 @@
   border-bottom: 1px solid #eeeeee;
 }
 
+.quote {
+  bottom: 20px;
+  position: absolute;
+}
+
+.loading-title {
+  width: 150px;
+  text-align: center;
+  position: absolute;
+  color: white;
+  top: 60%;
+  left: 30%;
+}
+
 .tags {
   max-height: 100%;
   overflow: scroll;
