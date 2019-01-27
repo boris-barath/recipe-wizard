@@ -17,7 +17,7 @@ if __name__ == "__main__":
             doc = nlp(ingredient['text'])
 
             print(len(doc.ents))
-            if len(doc.ents) > 1:
+            if len(doc.ents) >= 1:
                 ingredient['text'] = doc.ents[0].text
 
     with open('data_out.json', 'w') as file:

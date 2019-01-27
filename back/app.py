@@ -1,6 +1,8 @@
 import copy
 
 import pickle
+
+import spacy
 from flask import Flask, flash, request, redirect, render_template, jsonify, session
 from flask_session import Session
 from werkzeug.utils import secure_filename
@@ -26,6 +28,7 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 recipes, reverse_mapping = get_data('../crawl/recipes.json')
+nlp = spacy.load('../model/')
 
 
 def root_dir():  # pragma: no cover
@@ -57,6 +60,14 @@ def get_photo(photo_id):
     return tag.attrs.get('src')
 
 
+@app.before_request
+def before():
+    if session.get('state', None) is None:
+        session['state'] = {'recipes': copy.deepcopy(recipes), 'reverse_mapping': copy.deepcopy(reverse_mapping),
+                            'available': [], 'not_available': []}
+        session.modified = True
+
+
 # static page for initial page
 @app.route('/')
 def home():
@@ -66,10 +77,6 @@ def home():
 # page containing questions and final results
 @app.route('/questions')
 def questions():
-    session['state'] = {'recipes': copy.deepcopy(recipes), 'reverse_mapping': copy.deepcopy(reverse_mapping),
-                        'available': [], 'not_available': []}
-    session.modified = True
-
     return render_template('questions.html')
 
 
@@ -98,8 +105,19 @@ def upload_file():
         filename = secure_filename('uploaded-file.jpg')
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         detected = detect_ingredients("static/uploaded-file.jpg")
-        print(detected)
-        flash(detected)
+
+        filtered = []
+        for i in range(len(detected)):
+            doc = nlp(detected[i])
+
+            if len(doc.ents) >= 1:
+                filtered.append(doc.ents[0].text)
+
+        session.get('state')['available'].extend(filtered)
+        session.modified = True
+
+        print(filtered)
+        flash(filtered)
         return redirect('/questions')
     return 'unknown error'
 
