@@ -161,6 +161,6 @@ def reset():
     state = session.pop('state', {'fixed': []})
     before()
     session.get('state')['fixed'] = state['fixed']
-    session.get('state')['available'] = state['fixed']
+    session.get('state')['available'] = state['fixed'][:]
     session.modified = True
     return ''
