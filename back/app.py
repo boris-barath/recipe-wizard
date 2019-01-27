@@ -1,17 +1,14 @@
 import copy
 
-import pickle
-
 import spacy
 import random
 from flask import Flask, flash, request, redirect, render_template, jsonify, session
 from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
-from collections import defaultdict
-import numpy as np
 
 import requests
+import requests_cache
 from bs4 import BeautifulSoup
 
 import os
@@ -19,7 +16,7 @@ import os
 from ..back.receipt_detection import detect_ingredients
 from ..crawl.extractor import get_data, return_question
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 max_returned_recipes = 5
 
@@ -35,22 +32,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 recipes, reverse_mapping = get_data('../crawl/recipes.json')
 nlp = spacy.load('../model/')
 
-
-def root_dir():  # pragma: no cover
-    return os.path.abspath(os.path.dirname(__file__))
-
-
-def get_file(filename):  # pragma: no cover
-    try:
-        src = os.path.join(root_dir(), filename)
-        # Figure out how flask returns static files
-        # Tried:
-        # - render_template
-        # - send_file
-        # This should not be so non-obvious
-        return open(src).read()
-    except IOError as exc:
-        return str(exc)
+requests_cache.install_cache('req_cache')
 
 
 def allowed_file(filename):
@@ -69,7 +51,6 @@ def get_photo(photo_id):
     return tag.attrs.get('src')
 
 
-@app.before_request
 def before():
     if session.get('state', None) is None:
         session['state'] = {'recipes': copy.deepcopy(recipes), 'reverse_mapping': copy.deepcopy(reverse_mapping),
@@ -81,6 +62,7 @@ def before():
 # static page for initial page
 @app.route('/')
 def home():
+    before()
     return render_template('index.html')
 
 
@@ -95,16 +77,13 @@ def detail():
     rec_id = int(request.args.get('id'))
     rec = list(filter(lambda r: r.id == rec_id, recipes))[0]
     other = {'name': rec.name, 'ingredients': rec.ingredients, 'directions': rec.directions, 'calories': rec.calories,
-             'url': get_photo(rec_id)}
+             'url': get_photo(rec_id), 'id': rec_id}
     return jsonify(other)
 
 
 # post request here to upload image
 @app.route('/image', methods=['POST'])
 def upload_file():
-    # if not session.get('username'):
-    #     return 'user does not exist'
-
     # check if the post request has the file part
     if 'file-upload' not in request.files:
         return 'No file part'
@@ -222,7 +201,8 @@ def remove():
 @app.route('/reset', methods=['GET'])
 @cross_origin()
 def reset():
-    if len(session.get('state')['available']) == len(session.get('state')['fixed']) and len(session.get('state')['not_available']) == 0:
+    if len(session.get('state')['available']) == len(session.get('state')['fixed']) and len(
+            session.get('state')['not_available']) == 0:
         print('return')
         return ''
 
