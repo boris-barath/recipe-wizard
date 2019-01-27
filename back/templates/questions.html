@@ -52,6 +52,10 @@
 
         <h1 class="custom-title">Recipes</h1>
 
+        <div class="recipes">
+
+        </div>
+
 
         <!-- <div class="columns is-mobile food-border">
             <div class="column is-9">
@@ -132,6 +136,7 @@
       let latest;
 
       function addRecipes(recipes) {
+        $('.recipes').empty();
         for(var i = 0; i < recipes.length; i++) {
           var jedlo = `<a href="http://${window.location.host}/recipe/${recipes[i].value}">
                                     <div class="columns is-mobile food-border">
@@ -143,7 +148,7 @@
                                         </div>
                                     </div>
                                 </a>`;
-          $(".container").append(jedlo);
+          $(".recipes").append(jedlo);
         }
       }
 
@@ -193,6 +198,7 @@
             async: false,
             success : function(res) {
                 $(".title").text(`Do you have ${res.question}?`);
+                addRecipes(res.recipes);
                 latest = res.question;
             },
             error: function() {

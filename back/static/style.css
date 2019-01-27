@@ -15,10 +15,6 @@
   text-align: center;
 }
 
-.is-4 {
-  text-decoration: underline;
-}
-
 .ingredients {
   list-style: circle;
 }
@@ -74,6 +70,13 @@
 
 .recipe-image{
   background: whitesmoke;
+}
+
+.recipe-title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 30px;
+  padding-top: 10px;
 }
 
 .custom-img {
