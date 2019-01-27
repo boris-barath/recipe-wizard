@@ -196,6 +196,24 @@
             }}
       )});
 
+      $(".delete").click((e) => {
+        e.preventDefault();
+        console.log('removing element');
+        const elem = $(e.target);
+        const parent = elem.parent();
+        const text = parent.text();
+
+        $.ajax({
+          url: `http://${window.location.host}/remove?elem=${text}`,
+          type: "GET",
+          async: false,
+          success: () => {
+            console.log('removed ingredient');
+            parent.remove();
+          }
+        })
+      });
+
     </script>
   </body>
 </html>

@@ -161,6 +161,16 @@ def recipe(id):
     return render_template('recipe.html')
 
 
+@app.route('/remove', methods=['GET'])
+def remove():
+    elem = request.args.get('elem')
+    session['state']['recipes'] = copy.deepcopy(recipes)
+    session['state']['reverse_mapping'] = copy.deepcopy(reverse_mapping)
+    session['state']['not_available'].append(elem)
+    session['state']['available'] = list(filter(lambda x: x != elem, session['state']['available']))
+    return ''
+
+
 @app.route('/reset', methods=['GET'])
 @cross_origin()
 def reset():
