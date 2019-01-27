@@ -57,6 +57,8 @@ def get_photo(photo_id):
     page = requests.get("https://www.allrecipes.com/recipe/{}/".format(photo_id))
     soup = BeautifulSoup(page.content, 'html.parser')
     tag = soup.find(id="BI_openPhotoModal1")
+    if not tag:
+        return ''
     return tag.attrs.get('src')
 
 
