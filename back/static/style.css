@@ -1,5 +1,5 @@
 .inventory-button {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 10px;
   -webkit-tap-highlight-color: transparent;

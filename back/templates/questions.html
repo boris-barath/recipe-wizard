@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hello Bulma!</title>
+    <title>Recipe Wizard</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -46,8 +46,7 @@
             </button>
         </div>
 
-          <progress class="progress is-primary" value="0" max="100">0%</progress>
-
+          <progress class="progress is-primary" value="0" max="100"></progress>
           <hr>
 
         <h1 class="custom-title">Recipes</h1>
@@ -146,15 +145,17 @@
       }
 
       $(document).ready(() => {
-        $.ajax({
+        $.ajax({url : `http://${window.location.host}/reset`, type : "GET"}).then(() => {
+          $.ajax({
             url : `http://${window.location.host}/question`,
             type : "GET",
-            async: true,
+            async: false,
             success : function(res) {
-                $(".title").text(`Do you have ${res.question}?`);
-                addRecipes(res.recipes);
-                latest = res.question;
-        }});
+              $(".title").text(`Do you have ${res.question}?`);
+              addRecipes(res.recipes);
+              latest = res.question;
+            }});
+        });
       });
 
       $("#yes-button").click(() => {
@@ -168,6 +169,8 @@
             success : function(res) {
                 $(".title").text(`Do you have ${res.question}?`);
                 $(".tags").append(`<span class="tag is-primary is-medium">${latest}<button class="delete is-small"></button></span>`);
+                $progress = $('.progress');
+                $progress.attr('value', parseInt($progress.attr('value')) + 10);
                 addRecipes(res.recipes);
                 latest = res.question;
             },
@@ -192,10 +195,6 @@
               $(".title").text(`An error has occurred.`);
             }}
       )});
-
-    //   <span class="tag is-primary is-medium">test<button class="delete is-small"></button></span>
-
-    //   <a href="http://${window.location.host}/recipe/${vec.recipes[i].id}">
 
     </script>
   </body>
