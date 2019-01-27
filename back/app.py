@@ -1,6 +1,7 @@
 import uuid
+import json
 
-from flask import Flask, flash, request, redirect, render_template, jsonify
+from flask import Flask, Response, flash, request, redirect, render_template, jsonify
 # from flask_session import Session
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
@@ -101,4 +102,19 @@ def upload_file():
 @app.route('/question', methods=['GET'])
 @cross_origin()
 def question():
-    return 'beris'
+    # return jsonify(
+    #     question="felup",
+    #     messages=[{name:"sushi", value:"123"}]
+    # )
+    x = json.dumps({
+        "question":"hilfiger", 
+        "recipes":[{"name": "kebab do ruky", "id":"123"}, 
+                    {"name": "guess, g-star", "id":"345"}]})
+    return Response(x,  mimetype='application/json')
+
+@app.route('/recipe', methods=['GET'])
+@cross_origin()
+def recipe():
+    return render_template('recipe.html')
+
+
