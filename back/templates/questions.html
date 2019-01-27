@@ -174,7 +174,10 @@
       $("#yes-button").click(() => {
         var temp = latest;
         $.ajax({
-        url : `http://${window.location.host}/question?response="yes"`,
+        url : `http://${window.location.host}/question`,
+        data: {
+          response: "yes",
+        },
         type : "GET",
         async: false,
         success : function() {
@@ -194,7 +197,10 @@
       $("#no-button").click(() => {
         var temp = latest;
         $.ajax({
-        url : `http://${window.location.host}/question?response="no"`,
+        url : `http://${window.location.host}/question`,
+        data: {
+          response: "no",
+        },
         type : "GET",
         async: false,
         success : function() {

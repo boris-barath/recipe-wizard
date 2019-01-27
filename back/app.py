@@ -1,4 +1,6 @@
 import copy
+
+import pickle
 from flask import Flask, flash, request, redirect, render_template, jsonify, session
 from flask_session import Session
 from werkzeug.utils import secure_filename
@@ -110,13 +112,19 @@ def question():
     question_response = request.args.get('response', 'N/A')
 
     if question_response == 'yes':
-        session['available'].append(session['previous_question'])
+        session['state']['available'].append(session['previous_question'])
     elif question_response == 'no':
-        session['not_available'].append(session['previous_question'])
+        session['state']['not_available'].append(session['previous_question'])
 
     state = session.get('state')
     question = return_question(state['reverse_mapping'], state['recipes'],
                                state['available'], state['not_available'])
+    question['recipes'] = list(map(lambda recipe: {'value': recipe.id, 'name': recipe.name}, question['recipes']))
+
+    print(question)
+
+    session['previous_question'] = question['question']
+    session.modified = True
 
     return jsonify(question)
     # return jsonify(

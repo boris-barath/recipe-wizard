@@ -40,8 +40,8 @@ def return_question(reverse_mapping, recipes, available, not_available):
     """
     to_remove = []
     ret = {
-            "available_recipes": [],
-            "recipes": None
+            "recipes": [],
+            "question": None
           }
 
     print("number of available recipes: ", len(recipes))
