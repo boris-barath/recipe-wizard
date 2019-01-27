@@ -64,7 +64,7 @@ def get_photo(photo_id):
 def before():
     if session.get('state', None) is None:
         session['state'] = {'recipes': copy.deepcopy(recipes), 'reverse_mapping': copy.deepcopy(reverse_mapping),
-                            'available': [], 'not_available': []}
+                            'available': [], 'not_available': [], 'fixed': []}
         session.modified = True
 
 
@@ -114,6 +114,7 @@ def upload_file():
                 filtered.append(doc.ents[0].text)
 
         session.get('state')['available'].extend(filtered)
+        session.get('state')['fixed'] = filtered
         session.modified = True
 
         print(filtered)
@@ -140,6 +141,7 @@ def question():
     question['recipes'] = list(map(lambda recipe: {'value': recipe.id, 'name': recipe.name}, question['recipes']))
 
     print(question)
+    print(session.get('state')['available'])
 
     session['previous_question'] = question['question']
     session.modified = True
@@ -156,5 +158,10 @@ def recipe():
 @app.route('/reset', methods=['GET'])
 @cross_origin()
 def reset():
-    session.pop('state')
+    state = session.pop('state', {'fixed': []})
+    before()
+    session.get('state')['fixed'] = state['fixed']
+    session.get('state')['available'] = state['fixed']
+    session.modified = True
+    print(session.get('state'))
     return ''
